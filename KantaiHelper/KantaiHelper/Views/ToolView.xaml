@@ -21,7 +21,7 @@
             <ColumnDefinition Width="Auto"/>
             <ColumnDefinition/>
         </Grid.ColumnDefinitions>
-        
+
         <Expander Grid.Column="0"
                       ExpandDirection="Down"
                       Header="함대 목록"
@@ -42,9 +42,9 @@
                               PanningMode="Both"
                               Background="{DynamicResource ActiveBackgroundBrushKey}">
                 <!--<metro:TabView ItemsSource="{Binding Source={StaticResource Source}}">-->
-                <metro:TabView SelectedItem="{Binding SelectedMap, Mode=OneWayToSource}"
+                <metro:TabView SelectedItem="{Binding SelectedFleet, Mode=OneWayToSource}"
                                    IsSynchronizedWithCurrentItem="True"
-                                   MinWidth="40">
+                                   MinWidth="80">
                     <metro:TabView.Template>
                         <ControlTemplate TargetType="{x:Type metro:TabView}">
                             <StackPanel Background="{TemplateBinding Background}">
