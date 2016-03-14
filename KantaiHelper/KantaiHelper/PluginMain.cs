@@ -24,14 +24,14 @@ namespace KantaiHelper
 
 		public HelperPlugin()
 		{
-			this.ViewModel = new ToolViewModel(this);
+			this.ViewModel = new ToolViewModel();
 		}
 
 		public void Initialize() { }
 
-		string ITool.Name => "KantaiHelper";
+		public string Name => "KantaiHelper";
 
 		// 탭을 볼 때마다 new가 되어 버리지만, 지금은 이렇게 하지 않으면 멀티 윈도우에서 제대로 표시되지 않습니다.
-		object ITool.View => new ToolView();
+		public object View => new ToolView {DataContext = this.ViewModel};
 	}
 }

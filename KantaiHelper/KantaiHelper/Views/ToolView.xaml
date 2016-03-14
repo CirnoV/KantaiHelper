@@ -4,7 +4,12 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:KantaiHelper.Views"
+             xmlns:i="http://schemas.microsoft.com/expression/2010/interactivity"
+             xmlns:l="http://schemas.livet-mvvm.net/2011/wpf"
+             xmlns:ei="http://schemas.microsoft.com/expression/2010/interactions"
              xmlns:metro="http://schemes.grabacr.net/winfx/2014/controls"
+             Background="{DynamicResource ThemeBrushKey}"
+             Foreground="{DynamicResource ActiveForegroundBrushKey}"
              mc:Ignorable="d" 
              d:DesignHeight="530" d:DesignWidth="720">
 
@@ -13,6 +18,13 @@
             <ResourceDictionary.MergedDictionaries>
                 <ResourceDictionary Source="../Styles/DefaultStyle.xaml"/>
             </ResourceDictionary.MergedDictionaries>
+
+            <CollectionViewSource x:Key="FleetShipsSource"
+                                  Source="{Binding FleetShips}">
+                <!--<CollectionViewSource.GroupDescriptions>
+                    <PropertyGroupDescription PropertyName="Info.MapArea"/>
+                </CollectionViewSource.GroupDescriptions>-->
+            </CollectionViewSource>
         </ResourceDictionary>
     </UserControl.Resources>
 
@@ -41,8 +53,8 @@
             <ScrollViewer VerticalScrollBarVisibility="Auto"
                               PanningMode="Both"
                               Background="{DynamicResource ActiveBackgroundBrushKey}">
-                <!--<metro:TabView ItemsSource="{Binding Source={StaticResource Source}}">-->
-                <metro:TabView SelectedItem="{Binding SelectedFleet, Mode=OneWayToSource}"
+                <metro:TabView ItemsSource="{Binding Source={StaticResource FleetShipsSource}}"
+                                   SelectedItem="{Binding SelectShip, Mode=OneWayToSource}"
                                    IsSynchronizedWithCurrentItem="True"
                                    MinWidth="80">
                     <metro:TabView.Template>
