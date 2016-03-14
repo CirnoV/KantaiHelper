@@ -10,6 +10,9 @@ namespace KantaiHelper.ViewModels
 {
 	class ToolViewModel : ViewModel
 	{
-		
+		public ToolViewModel(HelperPlugin plugin)
+		{
+
+		}
 	}
 }
