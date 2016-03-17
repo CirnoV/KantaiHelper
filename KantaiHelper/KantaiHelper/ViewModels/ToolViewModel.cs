@@ -49,8 +49,7 @@ namespace KantaiHelper.ViewModels
 		{
 			/*_FleetShips = new FleetShipViewModel[3];
 			_FleetShips[0] = new FleetShipViewModel("황금함머");
-			_FleetShips[1] = new FleetShipViewModel("3-2-1 레벨링");
-			_FleetShips[2] = new FleetShipViewModel("트롤 세팅");*/
+			_FleetShips[1] = new FleetShipViewModel("3-2-1 레벨링");*/
 		}
 	}
 }
