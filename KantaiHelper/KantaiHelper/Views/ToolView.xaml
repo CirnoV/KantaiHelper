@@ -54,7 +54,7 @@
                               PanningMode="Both"
                               Background="{DynamicResource ActiveBackgroundBrushKey}">
                 <metro:TabView ItemsSource="{Binding Source={StaticResource FleetShipsSource}}"
-                                   SelectedItem="{Binding SelectShip, Mode=OneWayToSource}"
+                                   SelectedItem="{Binding SelectedFleet, Mode=OneWayToSource}"
                                    IsSynchronizedWithCurrentItem="True"
                                    MinWidth="90">
                     <metro:TabView.Template>

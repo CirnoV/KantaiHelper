@@ -8,6 +8,8 @@ using System.ComponentModel.Composition;
 using Grabacr07.KanColleViewer.Composition;
 using KantaiHelper.Views;
 using KantaiHelper.ViewModels;
+using Grabacr07.KanColleWrapper;
+using Grabacr07.KanColleWrapper.Models.Raw;
 
 namespace KantaiHelper
 {
@@ -21,13 +23,21 @@ namespace KantaiHelper
 	public class HelperPlugin : IPlugin, ITool
 	{
 		private readonly ToolViewModel ViewModel;
+		internal static kcsapi_start2 RawStart2 { get; private set; }
 
 		public HelperPlugin()
 		{
 			this.ViewModel = new ToolViewModel();
 		}
 
-		public void Initialize() { }
+		public void Initialize()
+		{
+			KanColleClient.Current.Proxy.api_start2.TryParse<kcsapi_start2>().Subscribe(x =>
+			{
+				RawStart2 = x.Data;
+				//Models.Repositories.Master.Current.Update(x.Data);
+			});
+		}
 
 		public string Name => "KantaiHelper";
 

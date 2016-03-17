@@ -11,7 +11,7 @@ namespace KantaiHelper.ViewModels
 	/// </summary>
 	public class ItemViewModel : ViewModel
 	{
-		#region IsSelected 変更通知プロパティ
+		#region IsSelected  변경 통지 프로퍼티
 
 		private bool _IsSelected;
 

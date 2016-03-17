@@ -13,7 +13,7 @@ namespace KantaiHelper.ViewModels
 	/// </summary>
 	public abstract class TabItemViewModel : ItemViewModel, ITabItem
 	{
-		#region Name 変更通知プロパティ
+		#region Name  변경 통지 프로퍼티
 
 		/// <summary>
 		/// タブ名を取得します。
@@ -22,7 +22,7 @@ namespace KantaiHelper.ViewModels
 
 		#endregion
 
-		#region Badge 変更通知プロパティ
+		#region Badge  변경 통지 프로퍼티
 
 		private int? _Badge;
 
@@ -44,7 +44,7 @@ namespace KantaiHelper.ViewModels
 
 		#endregion
 
-		#region Status 変更通知プロパティ
+		#region Status  변경 통지 프로퍼티
 
 		private ViewModel _Status;
 

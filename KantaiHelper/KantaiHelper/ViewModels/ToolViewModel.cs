@@ -11,7 +11,7 @@ namespace KantaiHelper.ViewModels
 {
 	class ToolViewModel : ViewModel
 	{
-		#region  FleetShips의 변경 안내 프로퍼티
+		#region  FleetShips 변경 통지 프로퍼티
 		private FleetShipViewModel[] _FleetShips;
 
 		public FleetShipViewModel[] FleetShips
@@ -28,18 +28,18 @@ namespace KantaiHelper.ViewModels
 		}
 		#endregion
 
-		#region  SelectShip의 변경 안내 프로퍼티
-		private FleetShipViewModel _SelectShip;
+		#region  SelectShip 변경 통지 프로퍼티
+		private FleetShipViewModel _SelectedFleet;
 
-		public FleetShipViewModel SelectShip
+		public FleetShipViewModel SelectedFleet
 		{
 			get
-			{ return this._SelectShip; }
+			{ return this._SelectedFleet; }
 			set
 			{
-				if (this._SelectShip == value)
+				if (this._SelectedFleet == value)
 					return;
-				this._SelectShip = value;
+				this._SelectedFleet = value;
 				this.RaisePropertyChanged();
 			}
 		}
@@ -47,10 +47,10 @@ namespace KantaiHelper.ViewModels
 
 		public ToolViewModel()
 		{
-			_FleetShips = new FleetShipViewModel[3];
+			/*_FleetShips = new FleetShipViewModel[3];
 			_FleetShips[0] = new FleetShipViewModel("황금함머");
 			_FleetShips[1] = new FleetShipViewModel("3-2-1 레벨링");
-			_FleetShips[2] = new FleetShipViewModel("트롤 세팅");
+			_FleetShips[2] = new FleetShipViewModel("트롤 세팅");*/
 		}
 	}
 }
