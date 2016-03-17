@@ -8,14 +8,19 @@ namespace KantaiHelper.ViewModels.Fleet
 {
 	class FleetShipViewModel : TabItemViewModel
 	{
-		private Random Random = new Random();
+		public readonly string Text;
 
 		public override string Name
 		{
 			get
 			{
-				return "테스트";
+				return Text;
 			}protected set { throw new NotImplementedException(); }
+		}
+
+		public FleetShipViewModel(string text)
+		{
+			this.Text = text;
 		}
 	}
 }

@@ -8,8 +8,11 @@
              xmlns:l="http://schemas.livet-mvvm.net/2011/wpf"
              xmlns:ei="http://schemas.microsoft.com/expression/2010/interactions"
              xmlns:metro="http://schemes.grabacr.net/winfx/2014/controls"
+			 xmlns:ViewModels="clr-namespace:KantaiHelper.ViewModels"
              Background="{DynamicResource ThemeBrushKey}"
              Foreground="{DynamicResource ActiveForegroundBrushKey}"
+			 d:DataContext="{d:DesignInstance ViewModels:ToolViewModel, IsDesignTimeCreatable=True}"
+             metro:ThemeHelper.HasThemeResources="True"
              mc:Ignorable="d" 
              d:DesignHeight="530" d:DesignWidth="720">
 
@@ -21,9 +24,6 @@
 
             <CollectionViewSource x:Key="FleetShipsSource"
                                   Source="{Binding FleetShips}">
-                <!--<CollectionViewSource.GroupDescriptions>
-                    <PropertyGroupDescription PropertyName="Info.MapArea"/>
-                </CollectionViewSource.GroupDescriptions>-->
             </CollectionViewSource>
         </ResourceDictionary>
     </UserControl.Resources>
@@ -35,8 +35,8 @@
         </Grid.ColumnDefinitions>
 
         <Expander Grid.Column="0"
-                      ExpandDirection="Down"
-                      Header="함대 목록"
+                      ExpandDirection="Right"
+                      Header="함&#xD;&#xA;대&#xD;&#xA;목&#xD;&#xA;록"
                       Background="{DynamicResource ThemeBrushKey}"
                       IsExpanded="True">
             <Expander.Style>
@@ -56,7 +56,7 @@
                 <metro:TabView ItemsSource="{Binding Source={StaticResource FleetShipsSource}}"
                                    SelectedItem="{Binding SelectShip, Mode=OneWayToSource}"
                                    IsSynchronizedWithCurrentItem="True"
-                                   MinWidth="80">
+                                   MinWidth="90">
                     <metro:TabView.Template>
                         <ControlTemplate TargetType="{x:Type metro:TabView}">
                             <StackPanel Background="{TemplateBinding Background}">
@@ -89,8 +89,13 @@
                     </metro:TabView.GroupStyle>
                 </metro:TabView>
             </ScrollViewer>
-
         </Expander>
-
+        <Grid Grid.Column="1"
+                      Background="{DynamicResource BackgroundBrushKey}">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition/>
+            </Grid.RowDefinitions>
+        </Grid>
     </Grid>
 </UserControl>
