@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace KantaiHelper.Models
 {
-	public class ShipData : NotificationObject
+	public class ShipData : ViewModel
 	{
 		#region Id 변경 통지 프로퍼티
 		private int _Id;
@@ -88,6 +88,40 @@ namespace KantaiHelper.Models
 				if (_Situation == value)
 					return;
 				_Situation = value;
+				RaisePropertyChanged();
+			}
+		}
+		#endregion
+
+		#region ConditionType 변경 통지 프로퍼티
+		private ConditionType _ConditionType;
+
+		public ConditionType ConditionType
+		{
+			get
+			{ return _ConditionType; }
+			set
+			{
+				if (_ConditionType == value)
+					return;
+				_ConditionType = value;
+				RaisePropertyChanged();
+			}
+		}
+		#endregion
+
+		#region Condition 변경 통지 프로퍼티
+		private int _Condition;
+
+		public int Condition
+		{
+			get
+			{ return _Condition; }
+			set
+			{
+				if (_Condition == value)
+					return;
+				_Condition = value;
 				RaisePropertyChanged();
 			}
 		}
@@ -319,6 +353,8 @@ namespace KantaiHelper.Models
 			this.TypeName = this.Source.Info.ShipType.Name;
 			this.Level = this.Source.Level;
 			this.Situation = this.Source.Situation;
+			this.ConditionType = this.Source.ConditionType;
+			this.Condition = this.Source.Condition;
 			this.NowHP = this.Source.HP.Current;
 			this.MaxHP = this.Source.HP.Maximum;
 			this.Slots = this.Source.Slots

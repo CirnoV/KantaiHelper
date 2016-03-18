@@ -6,25 +6,29 @@ using System.Threading.Tasks;
 
 using KantaiHelper.Models;
 using Grabacr07.KanColleWrapper;
+using Livet.EventListeners;
+using Livet;
 
 namespace KantaiHelper.ViewModels.Fleet
 {
 	class FleetShipViewModel : TabItemViewModel
 	{
-		public IEnumerable<int> FleetShipId;
+		public string FleetName;
 
-		#region Fleet 변경 통지 프로퍼티
-		private FleetData _Fleet;
+		public int[] FleetShipId;
 
-		public FleetData Fleet
+		#region Ships 변경 통지 프로퍼티
+		private ShipData[] _Ships;
+
+		public ShipData[] Ships
 		{
 			get
-			{ return this._Fleet; }
+			{ return this._Ships; }
 			set
 			{
-				if (this._Fleet == value)
+				if (this._Ships == value)
 					return;
-				this._Fleet = value;
+				this._Ships = value;
 				this.RaisePropertyChanged();
 			}
 		}
@@ -34,30 +38,20 @@ namespace KantaiHelper.ViewModels.Fleet
 		{
 			get
 			{
-				return this._Fleet.Name;
+				return this.FleetName+" " + FleetShipId[0] + ", " + FleetShipId[1] + ", " + FleetShipId[2];
 			}protected set { throw new NotImplementedException(); }
 		}
 
-		public FleetShipViewModel(string fleetname, IEnumerable<int> fleetshipid)
+		public FleetShipViewModel(string fleetname, int[] fleetshipid)
 		{
+			this.FleetName = fleetname;
 			this.FleetShipId = fleetshipid;
-
-			UpdateFleetData(fleetname);
 		}
 
-		private void UpdateFleetData(string fleetname)
+		private void UpdateFleetData()
 		{
 			var organization = KanColleClient.Current.Homeport.Organization;
-            /*this._Fleet = new FleetData(
-				FleetShipId.Count() > 0
-					? organization.Ships.Select(s => new MembersShipData(s.Value)).ToArray()
-					: new MembersShipData[0],
-				fleetname);*/
-
-            this._Fleet = new FleetData(
-                this.FleetShipId.Count() > 0
-                    ? organization.Ships.Where(x => this.FleetShipId.Any(t => x.Key == t)).Select(s => new MembersShipData(s.Value)).ToArray()
-                    : new MembersShipData[0], fleetname);
+            this._Ships = organization.Ships.Where(x => this.FleetShipId.Any(t => x.Value.Id == t)).Select(s => new MembersShipData(s.Value)).ToArray();
 		}
 	}
 }

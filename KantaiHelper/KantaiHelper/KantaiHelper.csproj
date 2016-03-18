@@ -128,7 +128,6 @@
     <Compile Include="Annotations\DarkAttribute.cs" />
     <Compile Include="Annotations\ElementalAttribute.cs" />
     <Compile Include="Annotations\LightAttribute.cs" />
-    <Compile Include="Models\FleetData.cs" />
     <Compile Include="Models\ShipData.cs" />
     <Compile Include="Models\ShipSlotData.cs" />
     <Compile Include="ViewModels\Fleet\FleetShipViewModel.cs" />

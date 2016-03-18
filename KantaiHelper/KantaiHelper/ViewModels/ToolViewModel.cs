@@ -6,6 +6,10 @@ using System.Threading.Tasks;
 using Livet;
 using Livet.Messaging;
 using KantaiHelper.ViewModels.Fleet;
+using Livet.EventListeners;
+using Grabacr07.KanColleWrapper;
+using MetroTrilithon.Mvvm;
+using MetroTrilithon.Lifetime;
 
 namespace KantaiHelper.ViewModels
 {
@@ -28,7 +32,7 @@ namespace KantaiHelper.ViewModels
 		}
 		#endregion
 
-		#region  SelectShip 변경 통지 프로퍼티
+		#region SelectShip 변경 통지 프로퍼티
 		private FleetShipViewModel _SelectedFleet;
 
 		public FleetShipViewModel SelectedFleet
@@ -47,9 +51,10 @@ namespace KantaiHelper.ViewModels
 
 		public ToolViewModel()
 		{
-			/*_FleetShips = new FleetShipViewModel[3];
-			_FleetShips[0] = new FleetShipViewModel("황금함머");
-			_FleetShips[1] = new FleetShipViewModel("3-2-1 레벨링");*/
+			_FleetShips = new FleetShipViewModel[3];
+			_FleetShips[0] = new FleetShipViewModel("시작함", new int[3] { 1, 4, 6 });
+			_FleetShips[1] = new FleetShipViewModel("1전 3뇌순 1항", new int[6] { 6528, 192, 40, 356, 456, 734});
+			_FleetShips[2] = new FleetShipViewModel("4잠", new int[4] { 6400, 294, 388, 3186});
 		}
 	}
 }
