@@ -9,6 +9,7 @@
              xmlns:ei="http://schemas.microsoft.com/expression/2010/interactions"
              xmlns:metro="http://schemes.grabacr.net/winfx/2014/controls"
 			 xmlns:ViewModels="clr-namespace:KantaiHelper.ViewModels"
+             xmlns:models="clr-namespace:KantaiHelper.Models"
              Background="{DynamicResource ThemeBrushKey}"
              Foreground="{DynamicResource ActiveForegroundBrushKey}"
 			 d:DataContext="{d:DesignInstance ViewModels:ToolViewModel, IsDesignTimeCreatable=True}"
@@ -96,6 +97,287 @@
                 <RowDefinition Height="Auto"/>
                 <RowDefinition/>
             </Grid.RowDefinitions>
+
+
+            <!--<ItemsControl ItemsSource="{Binding SelectedFleet.Fleet.Ships}"
+                      Background="Transparent"
+                      Grid.IsSharedSizeScope="True" DataContext="{Binding}"
+                      Margin="3,0">
+                <ItemsControl.ItemTemplate>
+                    <DataTemplate DataType="{x:Type models:MembersShipData}">
+                        <DataTemplate.Resources>
+                            <Style TargetType="{x:Type Run}">
+                                <Setter Property="Foreground" Value="{DynamicResource ForegroundBrushKey}"/>
+                            </Style>
+                        </DataTemplate.Resources>
+                        <StackPanel Margin="0,2,0,0"
+                                ToolTipService.ShowDuration="600000">
+                            <StackPanel.ToolTip>
+                                <StackPanel Orientation="Horizontal">
+                                    <StackPanel.Resources>
+                                        <Style TargetType="{x:Type TextBlock}"
+                                           BasedOn="{StaticResource DefaultTextStyleKey}">
+                                            <Setter Property="Margin" Value="3,0" />
+                                            <Setter Property="VerticalAlignment" Value="Top" />
+                                            <Setter Property="HorizontalAlignment" Value="Left" />
+                                        </Style>
+                                    </StackPanel.Resources>
+
+                                    <StackPanel Orientation="Horizontal">
+                                        <StackPanel>
+                                            <TextBlock>
+                                            <Run Text="火力"/>
+                                            <Run Text="{Binding SumFirepower, Mode=OneWay, Converter={StaticResource UnknownValueConverter}}"
+                                                 Style="{DynamicResource EmphaticTextElementStyleKey}"
+                                                 FontSize="12"/>
+                                            <Run>
+                                                <Run.Text>
+                                                    <MultiBinding StringFormat="{}({0}+{1})" Mode="OneWay">
+                                                        <Binding Path="Firepower"
+                                                                 Converter="{StaticResource UnknownValueConverter}"/>
+                                                        <Binding Path="SlotsFirepower"/>
+                                                    </MultiBinding>
+                                                </Run.Text>
+                                            </Run>
+                                            </TextBlock>
+
+                                            <TextBlock>
+                                            <Run Text="雷装"/>
+                                            <Run Text="{Binding SumTorpedo, Mode=OneWay, Converter={StaticResource UnknownValueConverter}}"
+                                                 Style="{DynamicResource EmphaticTextElementStyleKey}"
+                                                 FontSize="12"/>
+                                            <Run>
+                                                <Run.Text>
+                                                    <MultiBinding StringFormat="{}({0}+{1})" Mode="OneWay">
+                                                        <Binding Path="Torpedo"
+                                                                 Converter="{StaticResource UnknownValueConverter}"/>
+                                                        <Binding Path="SlotsTorpedo"/>
+                                                    </MultiBinding>
+                                                </Run.Text>
+                                            </Run>
+                                            </TextBlock>
+
+                                            <TextBlock>
+                                            <Run Text="対空"/>
+                                            <Run Text="{Binding SumAA, Mode=OneWay, Converter={StaticResource UnknownValueConverter}}"
+                                                 Style="{DynamicResource EmphaticTextElementStyleKey}"
+                                                 FontSize="12"/>
+                                            <Run>
+                                                <Run.Text>
+                                                    <MultiBinding StringFormat="{}({0}+{1})" Mode="OneWay">
+                                                        <Binding Path="AA"
+                                                                 Converter="{StaticResource UnknownValueConverter}"/>
+                                                        <Binding Path="SlotsAA"/>
+                                                    </MultiBinding>
+                                                </Run.Text>
+                                            </Run>
+                                            </TextBlock>
+
+                                            <TextBlock>
+                                            <Run Text="装甲"/>
+                                            <Run Text="{Binding SumArmer, Mode=OneWay, Converter={StaticResource UnknownValueConverter}}"
+                                                 Style="{DynamicResource EmphaticTextElementStyleKey}"
+                                                 FontSize="12"/>
+                                            <Run>
+                                                <Run.Text>
+                                                    <MultiBinding StringFormat="{}({0}+{1})" Mode="OneWay">
+                                                        <Binding Path="Armer"
+                                                                 Converter="{StaticResource UnknownValueConverter}"/>
+                                                        <Binding Path="SlotsArmer"/>
+                                                    </MultiBinding>
+                                                </Run.Text>
+                                            </Run>
+                                            </TextBlock>
+                                        </StackPanel>
+
+                                        <StackPanel>
+                                            <TextBlock>
+                                            <Run Text="対潜"/>
+                                            <Run Text="{Binding SlotsASW, Mode=OneWay, StringFormat={}(+{0})}"/>
+                                            </TextBlock>
+                                            <TextBlock>
+                                            <Run Text="命中"/>
+                                            <Run Text="{Binding SlotsHit, Mode=OneWay, StringFormat={}(+{0})}"/>
+                                            </TextBlock>
+                                            <TextBlock>
+                                            <Run Text="回避"/>
+                                            <Run Text="{Binding SlotsEvade, Mode=OneWay, StringFormat={}(+{0})}"/>
+                                            </TextBlock>
+                                        </StackPanel>
+                                    </StackPanel>
+
+                                    <StackPanel>
+                                        <TextBlock Text="攻撃種別"/>
+                                        <TextBlock>
+                                        <Run Text="昼戦"/>
+                                        <Run Text="{Binding DayAttackType, Mode=OneWay, Converter={StaticResource AttackTypeConverter}}"
+                                             Style="{DynamicResource EmphaticTextElementStyleKey}"
+                                             FontSize="{DynamicResource DefaultFontSizeKey}"/>
+                                        </TextBlock>
+                                        <TextBlock>
+                                        <Run Text="夜戦"/>
+                                        <Run Text="{Binding NightAttackType, Mode=OneWay, Converter={StaticResource AttackTypeConverter}}"
+                                             Style="{DynamicResource EmphaticTextElementStyleKey}"
+                                             FontSize="{DynamicResource DefaultFontSizeKey}"/>
+                                        </TextBlock>
+                                    </StackPanel>
+
+                                    <ItemsControl ItemsSource="{Binding Slots}"
+                                              Margin="7,0">
+                                        <ItemsControl.ItemTemplate>
+                                            <DataTemplate>
+                                                <Grid>
+                                                    <Grid.ColumnDefinitions>
+                                                        <ColumnDefinition Width="14"/>
+                                                        <ColumnDefinition Width="Auto"/>
+                                                    </Grid.ColumnDefinitions>
+                                                    <controls:SlotItemIcon Grid.Column="0"
+                                                                       Type="{Binding Source.IconType, Mode=OneWay}"
+                                                                       Width="14"
+                                                                       Height="14" />
+                                                    <TextBlock Grid.Column="1"
+                                                           Foreground="{DynamicResource ActiveForegroundBrushKey}"
+                                                           Style="{DynamicResource DefaultTextStyleKey}"
+                                                           Text="{Binding Source.Name, Mode=OneWay}"
+                                                           Margin="5,1"/>
+                                                </Grid>
+                                            </DataTemplate>
+                                        </ItemsControl.ItemTemplate>
+                                    </ItemsControl>
+                                </StackPanel>
+                            </StackPanel.ToolTip>
+
+                            <Grid HorizontalAlignment="Left">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="Auto"
+                                                  SharedSizeGroup="Name" />
+                                    <ColumnDefinition Width="Auto"
+                                                  SharedSizeGroup="HP" />
+                                    <ColumnDefinition/>
+                                </Grid.ColumnDefinitions>
+
+                                <TextBlock>
+                                <Run Text="{Binding Name, Mode=OneWay}"
+                                     Style="{DynamicResource EmphaticTextElementStyleKey}" />
+                                <Run Text="{Binding AdditionalName, Mode=OneWay}"
+                                     Foreground="{Binding AdditionalName, Converter={StaticResource AdditionalNameColorConverter}}"/>
+                                <LineBreak />
+                                <Run Text="Lv"
+                                     FontSize="11" />
+                                <Run Text="{Binding Level, Mode=OneWay}"
+                                     Style="{DynamicResource EmphaticTextElementStyleKey}"
+                                     FontSize="11" />
+                                <Run Text="{Binding TypeName, Mode=OneWay}"
+                                     FontSize="11" />
+                                </TextBlock>
+
+                                <Grid x:Name="HPIndicator"
+                                  Grid.Column="1"
+                                  Margin="5,1,5,0">
+                                    <Grid.RowDefinitions>
+                                        <RowDefinition Height="Auto"/>
+                                        <RowDefinition Height="*"/>
+                                    </Grid.RowDefinitions>
+
+                                    <Grid Grid.Row="0">
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition/>
+                                            <ColumnDefinition SharedSizeGroup="Curent"/>
+                                            <ColumnDefinition />
+                                            <ColumnDefinition SharedSizeGroup="Maximum"/>
+                                        </Grid.ColumnDefinitions>
+                                        <TextBlock Text="HP:"
+                                               Style="{DynamicResource DefaultTextStyleKey}"
+                                               Margin="0,2,0,0"
+                                               Grid.Column="0"/>
+
+                                        <TextBlock Text="{Binding HP.Current, Mode=OneWay}"
+                                               HorizontalAlignment="Right"
+                                               Style="{DynamicResource EmphaticTextStyleKey}"
+                                               Grid.Column="1"/>
+
+                                        <TextBlock Text="/"
+                                               Style="{DynamicResource DefaultTextStyleKey}"
+                                               Margin="0,1,0,0"
+                                               Grid.Column="2"/>
+
+                                        <TextBlock Text="{Binding HP.Maximum, Mode=OneWay}"
+                                               HorizontalAlignment="Right"
+                                               Margin="0,3,0,0"
+                                               Style="{DynamicResource DefaultTextStyleKey}"
+                                               Grid.Column="3"/>
+                                    </Grid>
+
+                                    <controls:ColorIndicator Grid.Row="1"
+                                                         Height="6"
+                                                         LimitedValue="{Binding HP, Mode=OneWay}"
+                                                         Margin="0,2,0,0" />
+                                </Grid>
+
+                                <Grid x:Name="EvacuationIndicator"
+                                  Grid.Column="1"
+                                  Visibility="Collapsed"
+                                  Margin="3,2,3,0">
+                                    <Border Background="{DynamicResource FleetRepairingBrushKey}"
+                                        Opacity=".4" />
+                                    <TextBlock Text="退避済"
+                                           Style="{DynamicResource EmphaticTextStyleKey}"
+                                           HorizontalAlignment="Center" />
+                                </Grid>
+
+                                <Grid x:Name="TowIndicator"
+                                  Grid.Column="1"
+                                  Visibility="Collapsed"
+                                  Margin="3,2,3,0">
+                                    <Border Background="{DynamicResource FleetRepairingBrushKey}"
+                                        Opacity=".4" />
+                                    <TextBlock Text="退避済"
+                                           Style="{DynamicResource EmphaticTextStyleKey}"
+                                           HorizontalAlignment="Center" />
+                                </Grid>
+
+                                <StackPanel Orientation="Horizontal"
+                                        Grid.Column="2">
+                                    <controls:SlotItemIcon Type="DamageControl"
+                                                       Width="14"
+                                                       Visibility="{Binding IsUsedDamecon, Converter={StaticResource TrueToVisibleConverter}}"
+                                                       Margin="0,0,3,0"/>
+                                    <TextBlock Text="使用"
+                                           Style="{DynamicResource EmphaticTextStyleKey}"
+                                           FontSize="12"
+                                           VerticalAlignment="Center"
+                                           Visibility="{Binding IsUsedDamecon, Converter={StaticResource TrueToVisibleConverter}}"
+                                           Margin="0,0,0,3"/>
+                                </StackPanel>
+                            </Grid>
+                            <Rectangle Height="1"
+                                   Margin="0,4,0,0"
+                                   Style="{DynamicResource SeparatorRectangleStyleKey}" />
+                        </StackPanel>
+
+                        <DataTemplate.Triggers>
+                            <DataTrigger Binding="{Binding Situation, Converter={StaticResource HasFlagConverter}, ConverterParameter=Evacuation}"
+                                     Value="True">
+                                <Setter TargetName="HPIndicator"
+                                    Property="Opacity"
+                                    Value=".2" />
+                                <Setter TargetName="EvacuationIndicator"
+                                    Property="Visibility"
+                                    Value="Visible" />
+                            </DataTrigger>
+                            <DataTrigger Binding="{Binding Situation, Converter={StaticResource HasFlagConverter}, ConverterParameter=Tow}"
+                                     Value="True">
+                                <Setter TargetName="HPIndicator"
+                                    Property="Opacity"
+                                    Value=".2" />
+                                <Setter TargetName="TowIndicator"
+                                    Property="Visibility"
+                                    Value="Visible" />
+                            </DataTrigger>
+                        </DataTemplate.Triggers>
+                    </DataTemplate>
+                </ItemsControl.ItemTemplate>
+            </ItemsControl>-->
         </Grid>
     </Grid>
 </UserControl>

@@ -11,7 +11,7 @@ namespace KantaiHelper.ViewModels.Fleet
 {
 	class FleetShipViewModel : TabItemViewModel
 	{
-		public int[] FleetShipId;
+		public IEnumerable<int> FleetShipId;
 
 		#region Fleet 변경 통지 프로퍼티
 		private FleetData _Fleet;
@@ -38,7 +38,7 @@ namespace KantaiHelper.ViewModels.Fleet
 			}protected set { throw new NotImplementedException(); }
 		}
 
-		public FleetShipViewModel(string fleetname, int[] fleetshipid)
+		public FleetShipViewModel(string fleetname, IEnumerable<int> fleetshipid)
 		{
 			this.FleetShipId = fleetshipid;
 
@@ -47,12 +47,17 @@ namespace KantaiHelper.ViewModels.Fleet
 
 		private void UpdateFleetData(string fleetname)
 		{
-			/*var organization = KanColleClient.Current.Homeport.Organization;
-			this._Fleet = new FleetData(
+			var organization = KanColleClient.Current.Homeport.Organization;
+            /*this._Fleet = new FleetData(
 				FleetShipId.Count() > 0
 					? organization.Ships.Select(s => new MembersShipData(s.Value)).ToArray()
 					: new MembersShipData[0],
 				fleetname);*/
+
+            this._Fleet = new FleetData(
+                this.FleetShipId.Count() > 0
+                    ? organization.Ships.Where(x => this.FleetShipId.Any(t => x.Key == t)).Select(s => new MembersShipData(s.Value)).ToArray()
+                    : new MembersShipData[0], fleetname);
 		}
 	}
 }
