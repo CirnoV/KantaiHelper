@@ -9,6 +9,7 @@
              xmlns:ei="http://schemas.microsoft.com/expression/2010/interactions"
              xmlns:metro="http://schemes.grabacr.net/winfx/2014/controls"
 			 xmlns:vm="clr-namespace:KantaiHelper.ViewModels"
+			 xmlns:fleetvm="clr-namespace:KantaiHelper.ViewModels.Fleet"
              xmlns:m="clr-namespace:KantaiHelper.Models"
 			 xmlns:kcvc="http://schemes.grabacr.net/winfx/2015/kancolleviewer/controls"
              Background="{DynamicResource ThemeBrushKey}"
@@ -23,26 +24,8 @@
             <ResourceDictionary.MergedDictionaries>
                 <ResourceDictionary Source="../Styles/DefaultStyle.xaml"/>
             </ResourceDictionary.MergedDictionaries>
-
-            <CollectionViewSource x:Key="FleetShipsSource"
-                                  Source="{Binding FleetShips}">
-            </CollectionViewSource>
-
-            <CollectionViewSource x:Key="SelectedFleetSource"
-                                  Source="{Binding SelectedFleet.Ships}">
-            </CollectionViewSource>
-
         </ResourceDictionary>
     </UserControl.Resources>
-
-    <i:Interaction.Triggers>
-
-        <!--WindowのContentRenderedイベントのタイミングでViewModelのInitializeメソッドが呼ばれます-->
-        <i:EventTrigger EventName="ContentRendered">
-            <l:LivetCallMethodAction MethodTarget="{Binding}" MethodName="Initialize"/>
-        </i:EventTrigger>
-
-    </i:Interaction.Triggers>
 
     <Grid Grid.Row="1">
         <Grid.ColumnDefinitions>
@@ -69,7 +52,7 @@
             <ScrollViewer VerticalScrollBarVisibility="Auto"
                               PanningMode="Both"
                               Background="{DynamicResource ActiveBackgroundBrushKey}">
-                <metro:TabView ItemsSource="{Binding Source={StaticResource FleetShipsSource}}"
+                <metro:TabView ItemsSource="{Binding FleetShips}"
                                    SelectedItem="{Binding SelectedFleet, Mode=OneWayToSource}"
                                    IsSynchronizedWithCurrentItem="True"
                                    MinWidth="90">
@@ -115,12 +98,17 @@
 
             <ScrollViewer HorizontalScrollBarVisibility="Auto"
 								  VerticalScrollBarVisibility="Disabled">
-                <ItemsControl  ItemsSource="{Binding Source={StaticResource SelectedFleetSource}}"
+                <ItemsControl  ItemsSource="{Binding SelectedFleet.Ships}"
 									  Background="Transparent"
 									  Grid.IsSharedSizeScope="True">
+                    <ItemsControl.ItemsPanel>
+                        <ItemsPanelTemplate>
+                            <UniformGrid Columns="2" Margin="0,0,10,0"/>
+                        </ItemsPanelTemplate>
+                    </ItemsControl.ItemsPanel>
                     <ItemsControl.ItemTemplate>
                         <DataTemplate>
-                            <StackPanel Margin="0,2,0,0">
+                            <StackPanel Margin="10,10,0,0">
                                 <StackPanel.Resources>
                                     <Style TargetType="{x:Type TextBlock}"
 												   BasedOn="{StaticResource DefaultTextStyleKey}">
@@ -177,17 +165,6 @@
 																	 Margin="0,2,0,0" />
                                     </Grid>
 
-                                    <Grid x:Name="RepairIndicator"
-												  Grid.Column="2"
-												  Visibility="Collapsed"
-												  Margin="8,2,8,0">
-                                        <Border Background="{DynamicResource FleetRepairingBrushKey}"
-														Opacity=".4" />
-                                        <TextBlock Text="입거중"
-														   Style="{DynamicResource EmphaticTextStyleKey}"
-														   HorizontalAlignment="Center" />
-                                    </Grid>
-
                                     <TextBlock Grid.Column="3">
 												<InlineUIContainer>
 													<kcvc:ConditionIcon ConditionType="{Binding ConditionType, Mode=OneWay}" />
@@ -199,6 +176,35 @@
 													 FontSize="9" />
                                     </TextBlock>
                                 </Grid>
+                                <ItemsControl ItemsSource="{Binding Slots}"
+												  Margin="7,0">
+                                    <ItemsControl.Template>
+                                        <ControlTemplate TargetType="{x:Type ItemsControl}">
+                                            <StackPanel IsItemsHost="True"/>
+                                        </ControlTemplate>
+                                    </ItemsControl.Template>
+                                    <ItemsControl.ItemTemplate>
+                                        <DataTemplate>
+                                            <Border x:Name="Elements"
+														ToolTip="{Binding Description}"
+														Background="Transparent">
+                                                <Grid>
+                                                    <Grid.ColumnDefinitions>
+                                                        <ColumnDefinition Width="Auto"
+																  SharedSizeGroup="SlotIcon" />
+                                                        <ColumnDefinition Width="Auto"
+																  SharedSizeGroup="SlotName" />
+                                                    </Grid.ColumnDefinitions>
+                                                    
+                                                    <kcvc:SlotItemIcon Grid.Column="0" Type="{Binding IconType}" Margin="0,3" />
+                                                    <TextBlock Grid.Column="1" Margin="5,5,0,0">
+                                                        <Run Style="{DynamicResource EmphaticTextElementStyleKey}" Text="{Binding NameWithLevel}"></Run>
+                                                    </TextBlock>
+                                                </Grid>
+                                            </Border>
+                                        </DataTemplate>
+                                    </ItemsControl.ItemTemplate>
+                                </ItemsControl>
                                 <Rectangle Height=".99"
 												   Margin="0,4,0,0"
 												   Style="{DynamicResource SeparatorRectangleStyleKey}" />

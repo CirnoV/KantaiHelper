@@ -17,10 +17,12 @@ namespace KantaiHelper.ViewModels.Fleet
 
 		public int[] FleetShipId;
 
-		#region Ships 변경 통지 프로퍼티
-		private ShipData[] _Ships;
+		public int[][] FleetItemId;
 
-		public ShipData[] Ships
+		#region Ships 변경 통지 프로퍼티
+		private IEnumerable<ShipData> _Ships;
+
+		public IEnumerable<ShipData> Ships
 		{
 			get
 			{ return this._Ships; }
@@ -38,20 +40,48 @@ namespace KantaiHelper.ViewModels.Fleet
 		{
 			get
 			{
-				return this.FleetName+" " + FleetShipId[0] + ", " + FleetShipId[1] + ", " + FleetShipId[2];
+				return this.FleetName;
 			}protected set { throw new NotImplementedException(); }
 		}
 
-		public FleetShipViewModel(string fleetname, int[] fleetshipid)
+		public FleetShipViewModel() { }
+
+		public FleetShipViewModel(string fleetname, int[] fleetshipid, int[][] fleetitemid)
 		{
 			this.FleetName = fleetname;
 			this.FleetShipId = fleetshipid;
+			this.FleetItemId = fleetitemid;
 		}
 
-		private void UpdateFleetData()
+		public void UpdateFleetData()
 		{
+			if (KanColleClient.Current.IsStarted == false) return;
 			var organization = KanColleClient.Current.Homeport.Organization;
-            this._Ships = organization.Ships.Where(x => this.FleetShipId.Any(t => x.Value.Id == t)).Select(s => new MembersShipData(s.Value)).ToArray();
+			this.Ships = organization.Ships.Where(x => this.FleetShipId.Any(t => x.Value.Id == t)).Select(s => new MembersShipData(s.Value)).ToArray();
+
+			foreach(ShipData ship in Ships)
+			{
+				for(int i = 0; i < FleetShipId.Count(); i++)
+				{
+					if(ship.Id == FleetShipId[i])
+					{
+						if (this.FleetItemId.Count() > i)
+						{
+							ship.ShipItemId = this.FleetItemId[i];
+						}
+						ship.FleetNo = i + 1;
+					}
+				}
+			}
+			Ships = this.Ships.OrderBy(x => x.FleetNo).ToArray();
+		}
+
+		public void UpdateFleetItem()
+		{
+			foreach(ShipData ship in Ships)
+			{
+				ship.UpdateSlots();
+			}
 		}
 	}
 }

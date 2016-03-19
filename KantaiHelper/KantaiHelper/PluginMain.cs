@@ -18,7 +18,7 @@ namespace KantaiHelper
 	[ExportMetadata("Guid", "614F4F22-82F3-4BAD-BB5C-5FF7EF1EECD0")]
 	[ExportMetadata("Title", "KantaiHelper")]
 	[ExportMetadata("Description", "함대 관리 기능을 추가하는 플러그인 입니다.")]
-	[ExportMetadata("Version", "0.0")]
+	[ExportMetadata("Version", "0.2")]
 	[ExportMetadata("Author", "@CirnoV")]
 	public class HelperPlugin : IPlugin, ITool
 	{
@@ -36,6 +36,10 @@ namespace KantaiHelper
 			{
 				RawStart2 = x.Data;
 				//Models.Repositories.Master.Current.Update(x.Data);
+			});
+			KanColleClient.Current.Proxy.api_port.TryParse<kcsapi_port>().Subscribe(x =>
+			{
+				ViewModel.Initialize();
 			});
 		}
 

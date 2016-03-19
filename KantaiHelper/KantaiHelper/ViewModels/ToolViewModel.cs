@@ -51,10 +51,44 @@ namespace KantaiHelper.ViewModels
 
 		public ToolViewModel()
 		{
-			_FleetShips = new FleetShipViewModel[3];
-			_FleetShips[0] = new FleetShipViewModel("시작함", new int[3] { 1, 4, 6 });
-			_FleetShips[1] = new FleetShipViewModel("1전 3뇌순 1항", new int[6] { 6528, 192, 40, 356, 456, 734});
-			_FleetShips[2] = new FleetShipViewModel("4잠", new int[4] { 6400, 294, 388, 3186});
+			_FleetShips = new FleetShipViewModel[1];
+			_FleetShips[0] = new FleetShipViewModel("2전 3뇌순 1항", new int[6] { 6528, 192, 40, 456, 356, 734 }, new int[][] {
+				new int[4] { 384, 8408, 739, 2236 },
+				new int[4] { 1381, 1380, 607, 8410 } ,
+				new int[3] { 4603, 362, 1488 },
+				new int[3] { 8409, 4596, 165 },
+				new int[3] { 597, 716, 166 },
+				new int[4] { 4617, 4865, 7537, 1057 }
+			});
+			//_FleetShips[1] = new FleetShipViewModel("시작함", new int[3] { 1, 4, 6 }, new int[][] { new int[1] { 3 } });
+			//_FleetShips[2] = new FleetShipViewModel("4잠", new int[4] { 6400, 294, 388, 3186 });
+		}
+
+		public void Initialize()
+		{
+			this.CompositeDisposable.Add(new PropertyChangedEventListener(KanColleClient.Current.Homeport.Organization)
+			{
+				{
+					() => KanColleClient.Current.Homeport.Organization.Ships,
+					(_, __) => { this.UpdateFleets(); this.UpdateFleetItems(); }
+				}
+			});
+		}
+
+		private void UpdateFleets()
+		{
+			foreach (FleetShipViewModel fleet in FleetShips)
+			{
+				fleet.UpdateFleetData();
+			}
+		}
+
+		private void UpdateFleetItems()
+		{
+			foreach (FleetShipViewModel fleet in FleetShips)
+			{
+				fleet.UpdateFleetItem();
+			}
 		}
 	}
 }

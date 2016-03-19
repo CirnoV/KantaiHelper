@@ -1,4 +1,5 @@
-﻿using Grabacr07.KanColleWrapper.Models;
+﻿using Grabacr07.KanColleWrapper;
+using Grabacr07.KanColleWrapper.Models;
 using Livet;
 using System;
 using System.Collections.Generic;
@@ -8,8 +9,27 @@ using System.Threading.Tasks;
 
 namespace KantaiHelper.Models
 {
-	public class ShipData : ViewModel
+	public class ShipData : NotificationObject
 	{
+		public int[] ShipItemId;
+
+		#region FleetNo 변경 통지 프로퍼티
+		private int _FleetNo;
+
+		public int FleetNo
+		{
+			get
+			{ return this._FleetNo; }
+			set
+			{
+				if (this._FleetNo == value)
+					return;
+				this._FleetNo = value;
+				this.RaisePropertyChanged();
+			}
+		}
+		#endregion
+
 		#region Id 변경 통지 프로퍼티
 		private int _Id;
 
@@ -159,105 +179,6 @@ namespace KantaiHelper.Models
 		}
 		#endregion
 
-		#region Firepower  변경 통지 프로퍼티
-
-		private int _Firepower;
-
-		/// <summary>
-		/// 火力ステータス値を取得します。
-		/// </summary>
-		public int Firepower
-		{
-			get { return this._Firepower; }
-			set
-			{
-				this._Firepower = value;
-				this.RaisePropertyChanged();
-
-			}
-		}
-
-		#endregion
-
-		#region Torpedo  변경 통지 프로퍼티
-
-		private int _Torpedo;
-
-		/// <summary>
-		/// 雷装ステータス値を取得します。
-		/// </summary>
-		public int Torpedo
-		{
-			get { return this._Torpedo; }
-			set
-			{
-				this._Torpedo = value;
-				this.RaisePropertyChanged();
-
-			}
-		}
-
-		#endregion
-
-		#region AA  변경 통지 프로퍼티
-
-		private int _AA;
-
-		/// <summary>
-		/// 対空ステータス値を取得します。
-		/// </summary>
-		public int AA
-		{
-			get { return this._AA; }
-			set
-			{
-				this._AA = value;
-				this.RaisePropertyChanged();
-			}
-
-		}
-
-		#endregion
-
-		#region Armer  변경 통지 프로퍼티
-
-		private int _Armer;
-
-		/// <summary>
-		/// 装甲ステータス値を取得します。
-		/// </summary>
-		public int Armer
-		{
-			get { return this._Armer; }
-			set
-			{
-				this._Armer = value;
-				this.RaisePropertyChanged();
-
-			}
-		}
-
-		#endregion
-
-		#region Luck  변경 통지 프로퍼티
-
-		private int _Luck;
-
-		/// <summary>
-		/// 運のステータス値を取得します。
-		/// </summary>
-		public int Luck
-		{
-			get { return this._Luck; }
-			set
-			{
-				this._Luck = value;
-				this.RaisePropertyChanged();
-			}
-		}
-
-		#endregion
-
 		#region Slots 변경 통지 프로퍼티
 		private IEnumerable<ShipSlotData> _Slots;
 
@@ -292,19 +213,6 @@ namespace KantaiHelper.Models
 		}
 		#endregion
 
-		public int SlotsFirepower => this.Slots.Sum(x => x.Firepower);
-		public int SlotsTorpedo => this.Slots.Sum(x => x.Torpedo);
-		public int SlotsAA => this.Slots.Sum(x => x.AA);
-		public int SlotsArmer => this.Slots.Sum(x => x.Armer);
-		public int SlotsASW => this.Slots.Sum(x => x.ASW);
-		public int SlotsHit => this.Slots.Sum(x => x.Hit);
-		public int SlotsEvade => this.Slots.Sum(x => x.Evade);
-
-		public int SumFirepower => 0 < this.Firepower ? this.Firepower + this.SlotsFirepower : this.Firepower;
-		public int SumTorpedo => 0 < this.Torpedo ? this.Torpedo + this.SlotsTorpedo : this.Torpedo;
-		public int SumAA => 0 < this.AA ? this.AA + this.SlotsAA : this.AA;
-		public int SumArmer => 0 < this.Armer ? this.Armer + this.SlotsArmer : this.Armer;
-
 		public LimitedValue HP => new LimitedValue(this.NowHP, this.MaxHP, 0);
 
 		public ShipData()
@@ -313,6 +221,26 @@ namespace KantaiHelper.Models
 			this._TypeName = "？？？";
 			this._Situation = ShipSituation.None;
 			this._Slots = new ShipSlotData[0];
+		}
+		
+		public void UpdateSlots()
+		{
+			if (KanColleClient.Current.IsStarted == false) return;
+			if (ShipItemId == null) return;
+			var itemyard = KanColleClient.Current.Homeport.Itemyard;
+			this.Slots = itemyard.SlotItems.Where(x => this.ShipItemId.Any(t => x.Value.Id == t)).Select(s => new ShipSlotData(s.Value)).ToArray();
+
+			foreach (ShipSlotData slot in Slots)
+			{
+				for (int i = 0; i < ShipItemId.Count(); i++)
+				{
+					if (slot.SlotId == ShipItemId[i])
+					{
+						slot.ShipSlotId = i;
+					}
+				}
+			}
+			Slots = this.Slots.OrderBy(x => x.ShipSlotId).ToArray();
 		}
 	}
 
@@ -357,17 +285,12 @@ namespace KantaiHelper.Models
 			this.Condition = this.Source.Condition;
 			this.NowHP = this.Source.HP.Current;
 			this.MaxHP = this.Source.HP.Maximum;
-			this.Slots = this.Source.Slots
+
+			/*this.Slots = this.Source.Slots
 				.Where(s => s != null)
 				.Where(s => s.Equipped)
 				.Select(s => new ShipSlotData(s)).ToArray();
-			this.ExSlot = new ShipSlotData(this.Source.ExSlot);
-
-			this.Firepower = this.Source.Firepower.Current;
-			this.Torpedo = this.Source.Torpedo.Current;
-			this.AA = this.Source.AA.Current;
-			this.Armer = this.Source.Armer.Current;
-			this.Luck = this.Source.Luck.Current;
+			this.ExSlot = new ShipSlotData(this.Source.ExSlot);*/
 		}
 	}
 }

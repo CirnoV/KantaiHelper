@@ -11,28 +11,13 @@ namespace KantaiHelper.Models
 {
 	public class ShipSlotData : NotificationObject
 	{
-		public SlotItemInfo Source { get; private set; }
+		//
+		// 요약:
+		//     해당 장비가 몇번째 슬롯인지를 나타냅니다.
+		public int ShipSlotId;
 
-		public int Maximum { get; private set; }
-
-		public bool Equipped => this.Source != null;
-
-		#region Current 변경 통지 프로퍼티
-
-		private int _Current;
-
-		public int Current
-		{
-			get { return this._Current; }
-			set
-			{
-				if (this._Current == value) return;
-				this._Current = value;
-				this.RaisePropertyChanged();
-			}
-		}
-
-		#endregion
+		public int SlotId;
+		public int MastarId;
 
 		public int Firepower { get; set; }
 		public int Torpedo { get; set; }
@@ -44,7 +29,10 @@ namespace KantaiHelper.Models
 		public int Evade { get; set; }
 		public int LOS { get; set; }
 
-		public string ToolTip => (this.Firepower != 0 ? "화력:" + this.Firepower : "")
+		public string NameWithLevel { get; set; }
+		public SlotItemIconType IconType { get; set; }
+
+		public string Description => (this.Firepower != 0 ? "화력:" + this.Firepower : "")
 								 + (this.Torpedo != 0 ? " 뇌장:" + this.Torpedo : "")
 								 + (this.AA != 0 ? " 대공:" + this.AA : "")
 								 + (this.Armer != 0 ? " 장갑:" + this.Armer : "")
@@ -54,15 +42,19 @@ namespace KantaiHelper.Models
 								 + (this.Evade != 0 ? " 회피:" + this.Evade : "")
 								 + (this.LOS != 0 ? " 색적:" + this.LOS : "");
 
-		public ShipSlotData(SlotItemInfo item, int maximum = -1, int current = -1)
+		public ShipSlotData(SlotItem item)
 		{
-			this.Source = item;
-			this.Maximum = maximum;
-			this._Current = current;
+			var info = item.Info;
 
-			if (item == null) return;
+			if (info == null) return;
 
-			var m = HelperPlugin.RawStart2.api_mst_slotitem.SingleOrDefault(x => x.api_id == item.Id);
+			this.SlotId = item.Id;
+			this.MastarId = item.Info.Id;
+
+			this.NameWithLevel = item.NameWithLevel;
+			this.IconType = item.Info.IconType;
+
+			var m = HelperPlugin.RawStart2.api_mst_slotitem.SingleOrDefault(x => x.api_id == info.Id);
 			if (m == null) return;
 			this.Armer = m.api_souk;
 			this.Firepower = m.api_houg;
@@ -73,11 +65,6 @@ namespace KantaiHelper.Models
 			this.Hit = m.api_houm;
 			this.Evade = m.api_houk;
 			this.LOS = m.api_saku;
-		}
-
-		public ShipSlotData(ShipSlot slot)
-			: this(slot.Item?.Info, slot.Maximum, slot.Current)
-		{
 		}
 	}
 }
