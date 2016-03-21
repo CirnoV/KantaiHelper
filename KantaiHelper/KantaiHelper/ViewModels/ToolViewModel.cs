@@ -95,6 +95,7 @@ namespace KantaiHelper.ViewModels
 				Directory.CreateDirectory(Path.Combine(MainFolder, "KantaiHelper"));
 
 			var csvPath = Path.Combine(MainFolder, "KantaiHelper/Fleets.csv");
+
 			if (File.Exists(csvPath))
 			{
 				foreach (var line in File.ReadAllLines(csvPath))
