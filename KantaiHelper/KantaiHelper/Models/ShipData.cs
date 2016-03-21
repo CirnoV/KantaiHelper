@@ -11,7 +11,7 @@ namespace KantaiHelper.Models
 {
 	public class ShipData : NotificationObject
 	{
-		public int[] ShipItemId;
+		public int[] ShipSlotId;
 
 		#region FleetNo 변경 통지 프로퍼티
 		private int _FleetNo;
@@ -226,15 +226,15 @@ namespace KantaiHelper.Models
 		public void UpdateSlots()
 		{
 			if (KanColleClient.Current.IsStarted == false) return;
-			if (ShipItemId == null) return;
+			if (ShipSlotId == null) return;
 			var itemyard = KanColleClient.Current.Homeport.Itemyard;
-			this.Slots = itemyard.SlotItems.Where(x => this.ShipItemId.Any(t => x.Value.Id == t)).Select(s => new ShipSlotData(s.Value)).ToArray();
+			this.Slots = itemyard.SlotItems.Where(x => this.ShipSlotId.Any(t => x.Value.Id == t)).Select(s => new ShipSlotData(s.Value)).ToArray();
 
 			foreach (ShipSlotData slot in Slots)
 			{
-				for (int i = 0; i < ShipItemId.Count(); i++)
+				for (int i = 0; i < ShipSlotId.Count(); i++)
 				{
-					if (slot.SlotId == ShipItemId[i])
+					if (slot.SlotId == ShipSlotId[i])
 					{
 						slot.ShipSlotId = i;
 					}

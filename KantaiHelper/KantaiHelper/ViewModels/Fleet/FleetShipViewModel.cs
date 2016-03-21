@@ -13,11 +13,26 @@ namespace KantaiHelper.ViewModels.Fleet
 {
 	class FleetShipViewModel : TabItemViewModel
 	{
-		public string FleetName;
+		#region FleetName 변경 통지 프로퍼티
+		private string _FleetName;
+
+		public string FleetName
+		{
+			get
+			{ return this._FleetName; }
+			set
+			{
+				if (this._FleetName == value)
+					return;
+				this._FleetName = value;
+				this.RaisePropertyChanged();
+			}
+		}
+		#endregion
 
 		public int[] FleetShipId;
 
-		public int[][] FleetItemId;
+		public int[][] FleetSlotId;
 
 		#region Ships 변경 통지 프로퍼티
 		private IEnumerable<ShipData> _Ships;
@@ -44,13 +59,15 @@ namespace KantaiHelper.ViewModels.Fleet
 			}protected set { throw new NotImplementedException(); }
 		}
 
-		public FleetShipViewModel() { }
+		public FleetShipViewModel() {
 
-		public FleetShipViewModel(string fleetname, int[] fleetshipid, int[][] fleetitemid)
+		}
+
+		public FleetShipViewModel(string fleetname, int[] fleetshipid, int[][] fleetslotid)
 		{
 			this.FleetName = fleetname;
 			this.FleetShipId = fleetshipid;
-			this.FleetItemId = fleetitemid;
+			this.FleetSlotId = fleetslotid;
 		}
 
 		public void UpdateFleetData()
@@ -65,23 +82,16 @@ namespace KantaiHelper.ViewModels.Fleet
 				{
 					if(ship.Id == FleetShipId[i])
 					{
-						if (this.FleetItemId.Count() > i)
+						if (this.FleetSlotId.Count() > i)
 						{
-							ship.ShipItemId = this.FleetItemId[i];
+							ship.ShipSlotId = this.FleetSlotId[i];
 						}
 						ship.FleetNo = i + 1;
 					}
 				}
-			}
-			Ships = this.Ships.OrderBy(x => x.FleetNo).ToArray();
-		}
-
-		public void UpdateFleetItem()
-		{
-			foreach(ShipData ship in Ships)
-			{
 				ship.UpdateSlots();
 			}
+			Ships = this.Ships.OrderBy(x => x.FleetNo).ToArray();
 		}
 	}
 }

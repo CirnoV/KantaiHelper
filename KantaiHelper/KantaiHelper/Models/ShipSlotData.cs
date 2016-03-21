@@ -11,9 +11,9 @@ namespace KantaiHelper.Models
 {
 	public class ShipSlotData : NotificationObject
 	{
-		//
-		// 요약:
-		//     해당 장비가 몇번째 슬롯인지를 나타냅니다.
+		/// <summary>
+		/// 해당 장비가 몇번째 슬롯인지를 나타냅니다.
+		/// </summary>
 		public int ShipSlotId;
 
 		public int SlotId;

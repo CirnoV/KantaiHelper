@@ -72,6 +72,10 @@
       <HintPath>..\packages\MetroTrilithon.0.2.0\lib\portable-net45+win+wp80+MonoAndroid10+xamarinios10+MonoTouch10\MetroTrilithon.dll</HintPath>
       <Private>True</Private>
     </Reference>
+    <Reference Include="MetroTrilithon.Desktop, Version=0.2.3.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\..\..\..\..\Users\Uni\Source\Repos\KanColleViewer\source\packages\MetroTrilithon.Desktop.0.2.3\lib\net46\MetroTrilithon.Desktop.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
     <Reference Include="Microsoft.Expression.Interactions, Version=4.5.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <HintPath>..\packages\LivetCask.1.3.1.0\lib\net45\Microsoft.Expression.Interactions.dll</HintPath>
       <Private>True</Private>
@@ -132,8 +136,16 @@
     <Compile Include="Models\ShipSlotData.cs" />
     <Compile Include="ViewModels\Fleet\FleetShipViewModel.cs" />
     <Compile Include="ViewModels\ItemViewModel.cs" />
+    <Compile Include="ViewModels\Setting\FleetSettingWindowViewModel.cs" />
+    <Compile Include="ViewModels\Setting\AddFleetWindowViewModel.cs" />
     <Compile Include="ViewModels\TabItemViewModel.cs" />
     <Compile Include="ViewModels\ToolViewModel.cs" />
+    <Compile Include="Views\Setting\FleetSettingWindow.xaml.cs">
+      <DependentUpon>FleetSettingWindow.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\Setting\AddFleetWindow.xaml.cs">
+      <DependentUpon>AddFleetWindow.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Views\ToolView.xaml.cs">
       <DependentUpon>ToolView.xaml</DependentUpon>
     </Compile>
@@ -171,6 +183,14 @@
   </ItemGroup>
   <ItemGroup>
     <Page Include="Styles\DefaultStyle.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\Setting\FleetSettingWindow.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Views\Setting\AddFleetWindow.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
