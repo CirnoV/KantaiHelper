@@ -14,6 +14,7 @@ using System.IO;
 using KantaiHelper.Models;
 using KantaiHelper.ViewModels.Setting;
 using System.Collections.ObjectModel;
+using System.Xml;
 
 namespace KantaiHelper.ViewModels
 {
@@ -89,47 +90,100 @@ namespace KantaiHelper.ViewModels
 
 		private string MainFolder = Path.GetDirectoryName(System.Reflection.Assembly.GetEntryAssembly().Location);
 
+		/// <summary>
+		/// 함대 데이터를 불러옵니다.
+		/// </summary>
 		public void LoadFleets()
 		{
-			if (!Directory.Exists(Path.Combine(MainFolder, "KantaiHelper")))
-				Directory.CreateDirectory(Path.Combine(MainFolder, "KantaiHelper"));
+			if (!Directory.Exists(Path.Combine(MainFolder, "KantaiHelper"))) return;
 
-			var csvPath = Path.Combine(MainFolder, "KantaiHelper/Fleets.csv");
+			var xmlPath = Path.Combine(MainFolder, "KantaiHelper/Fleets.xml");
 
-			if (File.Exists(csvPath))
+			if (File.Exists(xmlPath))
 			{
-				foreach (var line in File.ReadAllLines(csvPath))
+				XmlDocument xml = new XmlDocument();
+				xml.Load(xmlPath);
+
+				XmlNode root = xml.SelectNodes("fleets")[0];
+
+				foreach (XmlNode kantai in root.SelectNodes("fleet"))
 				{
-					int partcount = 0;
-					var parts = line.Split(',');
-					if (parts[0] != "")
+					var fleet = new FleetShipViewModel();
+					fleet.FleetShipId = new List<int>();
+					fleet.FleetSlotId = new List<List<int>>();
+
+					fleet.FleetName = kantai.Attributes["name"].Value;
+					
+					foreach (XmlNode shipid in kantai.SelectNodes("ship"))
 					{
-						var fleet = new FleetShipViewModel();
-						fleet.FleetShipId = new int[6];
-						fleet.FleetSlotId = new int[6][];
+						fleet.FleetShipId.Add(int.Parse(shipid.Attributes["id"].Value));
 
-						fleet.FleetName = parts[partcount];
-						partcount++;
-						for (int x = 0; x < 6; x++)
+						List<int> slot = new List<int>();
+						foreach (XmlNode slotid in shipid.SelectNodes("slot"))
 						{
-							int.TryParse(parts[partcount], out fleet.FleetShipId[x]);
-							partcount++;
-
-							fleet.FleetSlotId[x] = new int[4];
-							for (int y = 0; y < 4; y++)
-							{
-								int.TryParse(parts[partcount], out fleet.FleetSlotId[x][y]);
-								partcount++;
-							}
+							slot.Add(int.Parse(slotid.Attributes["id"].Value));
 						}
-						_Fleets.Add(fleet);
+						fleet.FleetSlotId.Add(slot);
 					}
+
+					Fleets.Add(fleet);
 				}
 			}
 		}
 
+		/// <summary>
+		/// 함대 데이터를 저장합니다.
+		/// </summary>
 		public void SaveFleets()
 		{
+			if (!Directory.Exists(Path.Combine(MainFolder, "KantaiHelper")))
+				Directory.CreateDirectory(Path.Combine(MainFolder, "KantaiHelper"));
+
+			string path = Path.Combine(MainFolder, "KantaiHelper");
+
+			XmlDocument xml = new XmlDocument();
+
+			XmlNode root = xml.CreateElement("fleets");
+			xml.AppendChild(root);
+
+			foreach (var fleet in Fleets)
+			{
+				XmlNode kantai = xml.CreateElement("fleet");
+				XmlAttribute kantaiName = xml.CreateAttribute("name");
+
+				kantaiName.Value = fleet.FleetName;
+
+				kantai.Attributes.Append(kantaiName);
+				root.AppendChild(kantai);
+
+				int count = 0;
+				foreach(var kantaishipid in fleet.FleetShipId)
+				{
+					XmlNode ship = xml.CreateElement("ship");
+					XmlAttribute shipid = xml.CreateAttribute("id");
+
+					shipid.Value = kantaishipid.ToString();
+
+					ship.Attributes.Append(shipid);
+					kantai.AppendChild(ship);
+
+					foreach (var kantaislotid in fleet.FleetSlotId[count])
+					{
+						XmlNode slot = xml.CreateElement("slot");
+						XmlAttribute slotid = xml.CreateAttribute("id");
+
+						slotid.Value = kantaislotid.ToString();
+
+						slot.Attributes.Append(slotid);
+						ship.AppendChild(slot);
+					}
+					count++;
+				}
+			}
+			path += @"\Fleets.xml";
+			xml.Save(path);
+
+			/*
 			if (!Directory.Exists(Path.Combine(MainFolder, "KantaiHelper")))
 				Directory.CreateDirectory(Path.Combine(MainFolder, "KantaiHelper"));
 
@@ -156,6 +210,7 @@ namespace KantaiHelper.ViewModels
 				writer.WriteLine(data);
 			}
 			writer.Close();
+			*/
 		}
 
 		public void AddFleet(FleetShipViewModel fleet)

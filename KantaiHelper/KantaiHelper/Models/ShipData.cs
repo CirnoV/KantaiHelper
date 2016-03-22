@@ -11,7 +11,7 @@ namespace KantaiHelper.Models
 {
 	public class ShipData : NotificationObject
 	{
-		public int[] ShipSlotId;
+		public List<int> ShipSlotId;
 
 		#region FleetNo 변경 통지 프로퍼티
 		private int _FleetNo;

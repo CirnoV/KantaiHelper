@@ -30,9 +30,9 @@ namespace KantaiHelper.ViewModels.Fleet
 		}
 		#endregion
 
-		public int[] FleetShipId;
+		public List<int> FleetShipId;
 
-		public int[][] FleetSlotId;
+		public List<List<int>> FleetSlotId;
 
 		#region Ships 변경 통지 프로퍼티
 		private IEnumerable<ShipData> _Ships;
@@ -63,7 +63,7 @@ namespace KantaiHelper.ViewModels.Fleet
 
 		}
 
-		public FleetShipViewModel(string fleetname, int[] fleetshipid, int[][] fleetslotid)
+		public FleetShipViewModel(string fleetname, List<int> fleetshipid, List<List<int>> fleetslotid)
 		{
 			this.FleetName = fleetname;
 			this.FleetShipId = fleetshipid;
