@@ -104,7 +104,7 @@ namespace KantaiHelper.ViewModels
 				XmlDocument xml = new XmlDocument();
 				xml.Load(xmlPath);
 
-				XmlNode root = xml.SelectNodes("fleets")[0];
+				XmlNode root = xml.SelectSingleNode("fleets");
 
 				foreach (XmlNode kantai in root.SelectNodes("fleet"))
 				{
@@ -113,10 +113,11 @@ namespace KantaiHelper.ViewModels
 					fleet.FleetSlotId = new List<List<int>>();
 
 					fleet.FleetName = kantai.Attributes["name"].Value;
-					
+
 					foreach (XmlNode shipid in kantai.SelectNodes("ship"))
 					{
 						fleet.FleetShipId.Add(int.Parse(shipid.Attributes["id"].Value));
+						fleet.FleetExSlotId.Add(int.Parse(kantai.Attributes["exslot"].Value));
 
 						List<int> slot = new List<int>();
 						foreach (XmlNode slotid in shipid.SelectNodes("slot"))
@@ -161,10 +162,13 @@ namespace KantaiHelper.ViewModels
 				{
 					XmlNode ship = xml.CreateElement("ship");
 					XmlAttribute shipid = xml.CreateAttribute("id");
+					XmlAttribute exslotid = xml.CreateAttribute("exslotid");
 
 					shipid.Value = kantaishipid.ToString();
+					exslotid.Value = fleet.FleetExSlotId[count].ToString();
 
 					ship.Attributes.Append(shipid);
+					ship.Attributes.Append(exslotid);
 					kantai.AppendChild(ship);
 
 					foreach (var kantaislotid in fleet.FleetSlotId[count])

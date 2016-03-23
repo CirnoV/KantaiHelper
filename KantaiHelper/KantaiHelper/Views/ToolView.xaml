@@ -26,6 +26,8 @@
             <ResourceDictionary.MergedDictionaries>
                 <ResourceDictionary Source="../Styles/DefaultStyle.xaml"/>
             </ResourceDictionary.MergedDictionaries>
+
+            <BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter" />
         </ResourceDictionary>
     </UserControl.Resources>
 
@@ -69,7 +71,7 @@
             <ScrollViewer VerticalScrollBarVisibility="Auto"
                               PanningMode="Both"
                               Background="{DynamicResource ActiveBackgroundBrushKey}">
-                <metro:TabView ItemsSource="{Binding Fleets}"
+                <metro:TabView ItemsSource="{Binding Fleets, Mode=TwoWay}"
                                    SelectedItem="{Binding SelectedFleet}"
                                    IsSynchronizedWithCurrentItem="True"
                                    MinWidth="90">
@@ -159,48 +161,52 @@
 													   ToolTipService.HorizontalOffset="-9"
 													   ToolTipService.VerticalOffset="-3">
 												<Run Text="{Binding Name, Mode=OneWay}"
-													 Style="{DynamicResource EmphaticTextElementStyleKey}" />
+													 Style="{DynamicResource EmphaticTextElementStyleKey}" 
+                                                     FontSize="13"/>
 												<LineBreak />
 												<Run Text="{Binding TypeName, Mode=OneWay}"
-													 FontSize="11" />
+													 FontSize="9" />
                                         </TextBlock>
 
                                         <TextBlock Grid.Column="1"
 													   Margin="12,0,0,0">
-												<Run Text="Lv." />
+												<Run Text="Lv." FontSize="10"/>
 												<Run Text="{Binding Level, Mode=OneWay}"
-													 Style="{DynamicResource EmphaticTextElementStyleKey}" />
+													 Style="{DynamicResource EmphaticTextElementStyleKey}" 
+                                                     FontSize="13"/>
                                         </TextBlock>
 
-                                        <Grid x:Name="HPIndicator"
-												  Grid.Column="2"
-												  Margin="12,1,12,0">
-                                            <Grid.RowDefinitions>
-                                                <RowDefinition Height="Auto" />
-                                                <RowDefinition Height="Auto" />
-                                            </Grid.RowDefinitions>
-                                            <TextBlock>
-													<Run Text="HP:" />
-													<Run Text="{Binding HP.Current, Mode=OneWay}"
-														 Style="{DynamicResource EmphaticTextElementStyleKey}" />
-													<Run Text="{Binding HP.Maximum, StringFormat=/{0}, Mode=OneWay}" />
-                                            </TextBlock>
-                                            <kcvc:ColorIndicator Grid.Row="1"
-																	 Height="6"
-																	 LimitedValue="{Binding HP, Mode=OneWay}"
-																	 Margin="0,2,0,0" />
-                                        </Grid>
-
-                                        <TextBlock Grid.Column="3">
+                                        <TextBlock Grid.Column="2" Margin="12,1,0,0">
 												<InlineUIContainer>
 													<kcvc:ConditionIcon ConditionType="{Binding ConditionType, Mode=OneWay}" />
 												</InlineUIContainer>
 												<Run Text="{Binding Condition, Mode=OneWay}"
-													 Style="{DynamicResource EmphaticTextElementStyleKey}" />
+													 Style="{DynamicResource EmphaticTextElementStyleKey}" 
+                                                     FontSize="13"/>
 												<LineBreak />
 												<Run Text="컨디션"
-													 FontSize="9" />
+													 FontSize="8" />
                                         </TextBlock>
+
+                                        <Border x:Name="Elements"
+												ToolTip="{Binding ExSlot.NameWithLevel}"
+												Background="Transparent"
+                                                Grid.Column="3"
+                                                Margin="6,0,0,0"
+                                                Visibility="{Binding ExSlotEquipped, Converter={StaticResource BooleanToVisibilityConverter}}">
+                                            <Grid>
+                                                <Grid.ColumnDefinitions>
+                                                    <ColumnDefinition Width="Auto"/>
+                                                    <ColumnDefinition Width="Auto"/>
+                                                </Grid.ColumnDefinitions>
+
+                                                <Rectangle Width="1"
+                                                           Style="{DynamicResource SeparatorRectangleStyleKey}"
+                                                           Margin="0,4,0,3"/>
+
+                                                <kcvc:SlotItemIcon Grid.Column="1" Type="{Binding ExSlot.IconType}" Margin="5,3"/>
+                                            </Grid>
+                                        </Border>
                                     </Grid>
                                     <Grid>
                                         <Grid.RowDefinitions>
@@ -227,9 +233,9 @@
 																  SharedSizeGroup="SlotName" />
                                                             </Grid.ColumnDefinitions>
 
-                                                            <kcvc:SlotItemIcon Grid.Column="0" Type="{Binding IconType}" Margin="0,3" />
-                                                            <TextBlock Grid.Column="1" Margin="5,5,0,0">
-                                                        <Run Style="{DynamicResource EmphaticTextElementStyleKey}" Text="{Binding NameWithLevel}"></Run>
+                                                            <kcvc:SlotItemIcon Grid.Column="0" Type="{Binding IconType}" Margin="0,3"/>
+                                                            <TextBlock Grid.Column="1" Margin="5,7,0,0">
+                                                        <Run Style="{DynamicResource EmphaticTextElementStyleKey}" Text="{Binding NameWithLevel}" FontSize="12"></Run>
                                                             </TextBlock>
                                                         </Grid>
                                                     </Border>

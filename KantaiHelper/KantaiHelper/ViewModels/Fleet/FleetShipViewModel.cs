@@ -34,6 +34,8 @@ namespace KantaiHelper.ViewModels.Fleet
 
 		public List<List<int>> FleetSlotId;
 
+		public List<int> FleetExSlotId;
+
 		#region Ships 변경 통지 프로퍼티
 		private IEnumerable<ShipData> _Ships;
 
@@ -63,20 +65,21 @@ namespace KantaiHelper.ViewModels.Fleet
 
 		}
 
-		public FleetShipViewModel(string fleetname, List<int> fleetshipid, List<List<int>> fleetslotid)
+		public FleetShipViewModel(string fleetname, List<int> fleetshipid, List<List<int>> fleetslotid, List<int> exslotid)
 		{
 			this.FleetName = fleetname;
 			this.FleetShipId = fleetshipid;
 			this.FleetSlotId = fleetslotid;
+			this.FleetExSlotId = exslotid;
 		}
 
 		public void UpdateFleetData()
 		{
 			if (KanColleClient.Current.IsStarted == false) return;
 			var organization = KanColleClient.Current.Homeport.Organization;
-			this.Ships = organization.Ships.Where(x => this.FleetShipId.Any(t => x.Value.Id == t)).Select(s => new MembersShipData(s.Value)).ToArray();
+			this._Ships = organization.Ships.Where(x => this.FleetShipId.Any(t => x.Value.Id == t)).Select(s => new MembersShipData(s.Value)).ToArray();
 
-			foreach(ShipData ship in Ships)
+			foreach(ShipData ship in _Ships)
 			{
 				for(int i = 0; i < FleetShipId.Count(); i++)
 				{
@@ -86,6 +89,8 @@ namespace KantaiHelper.ViewModels.Fleet
 						{
 							ship.ShipSlotId = this.FleetSlotId[i];
 						}
+						ship.ShipExSlotId = this.FleetExSlotId[i];
+
 						ship.FleetNo = i + 1;
 					}
 				}

@@ -12,6 +12,7 @@ namespace KantaiHelper.Models
 	public class ShipData : NotificationObject
 	{
 		public List<int> ShipSlotId;
+		public int ShipExSlotId;
 
 		#region FleetNo 변경 통지 프로퍼티
 		private int _FleetNo;
@@ -196,6 +197,8 @@ namespace KantaiHelper.Models
 		}
 		#endregion
 
+		public bool ExSlotEquipped => ExSlot != null;
+
 		#region ExSlot 변경 통지 프로퍼티
 		private ShipSlotData _ExSlot;
 
@@ -227,10 +230,10 @@ namespace KantaiHelper.Models
 		{
 			if (KanColleClient.Current.IsStarted == false) return;
 			if (ShipSlotId == null) return;
-			var itemyard = KanColleClient.Current.Homeport.Itemyard;
-			this.Slots = itemyard.SlotItems.Where(x => this.ShipSlotId.Any(t => x.Value.Id == t)).Select(s => new ShipSlotData(s.Value)).ToArray();
+			var itemYard = KanColleClient.Current.Homeport.Itemyard;
+			this._Slots = itemYard.SlotItems.Where(x => this.ShipSlotId.Any(t => x.Value.Id == t)).Select(s => new ShipSlotData(s.Value)).ToArray();
 
-			foreach (ShipSlotData slot in Slots)
+			foreach (ShipSlotData slot in _Slots)
 			{
 				for (int i = 0; i < ShipSlotId.Count(); i++)
 				{
@@ -240,7 +243,13 @@ namespace KantaiHelper.Models
 					}
 				}
 			}
-			Slots = this.Slots.OrderBy(x => x.ShipSlotId).ToArray();
+			this.Slots = this.Slots.OrderBy(x => x.ShipSlotId).ToArray();
+
+			var exSlotItem = itemYard.SlotItems.SingleOrDefault(x => x.Value.Id == ShipExSlotId).Value;
+			if(exSlotItem != null)
+			{
+				this.ExSlot = new ShipSlotData(exSlotItem);
+			}
 		}
 	}
 
