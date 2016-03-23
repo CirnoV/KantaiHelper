@@ -108,16 +108,14 @@
                 </metro:TabView>
             </ScrollViewer>
         </Expander>
-        <Grid Grid.Column="1"
-                      Background="{DynamicResource BackgroundBrushKey}">
+        <ScrollViewer Grid.Column="1" HorizontalScrollBarVisibility="Auto"
+					  VerticalScrollBarVisibility="Auto">
+            <Grid Background="{DynamicResource BackgroundBrushKey}">
             <Grid.RowDefinitions>
                 <RowDefinition Height="Auto"/>
                 <RowDefinition/>
             </Grid.RowDefinitions>
-
-            <ScrollViewer HorizontalScrollBarVisibility="Auto"
-								  VerticalScrollBarVisibility="Disabled">
-                <StackPanel>
+            <StackPanel>
                     <Grid HorizontalAlignment="Left" Margin="0,5,0,0">
                         <Grid.ColumnDefinitions>
                             <ColumnDefinition Width="Auto"/>
@@ -251,7 +249,7 @@
                         </ItemsControl.ItemTemplate>
                     </ItemsControl>
                 </StackPanel>
-            </ScrollViewer>
-        </Grid>
+            </Grid>
+        </ScrollViewer>
     </Grid>
 </UserControl>

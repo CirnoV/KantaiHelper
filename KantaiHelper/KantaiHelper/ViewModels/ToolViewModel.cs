@@ -111,13 +111,14 @@ namespace KantaiHelper.ViewModels
 					var fleet = new FleetShipViewModel();
 					fleet.FleetShipId = new List<int>();
 					fleet.FleetSlotId = new List<List<int>>();
+					fleet.FleetExSlotId = new List<int>();
 
 					fleet.FleetName = kantai.Attributes["name"].Value;
 
 					foreach (XmlNode shipid in kantai.SelectNodes("ship"))
 					{
 						fleet.FleetShipId.Add(int.Parse(shipid.Attributes["id"].Value));
-						fleet.FleetExSlotId.Add(int.Parse(kantai.Attributes["exslot"].Value));
+						fleet.FleetExSlotId.Add(int.Parse(shipid.Attributes["exslotid"].Value));
 
 						List<int> slot = new List<int>();
 						foreach (XmlNode slotid in shipid.SelectNodes("slot"))
