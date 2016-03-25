@@ -8,11 +8,20 @@ using KantaiHelper.Models;
 using Grabacr07.KanColleWrapper;
 using Livet.EventListeners;
 using Livet;
+using Livet.Messaging.Windows;
 
 namespace KantaiHelper.ViewModels.Fleet
 {
 	class FleetShipViewModel : TabItemViewModel
 	{
+		public ToolViewModel _ViewModel;
+
+		public List<int> FleetShipId;
+
+		public List<List<int>> FleetSlotId;
+
+		public List<int> FleetExSlotId;
+
 		#region FleetName 변경 통지 프로퍼티
 		private string _FleetName;
 
@@ -29,12 +38,6 @@ namespace KantaiHelper.ViewModels.Fleet
 			}
 		}
 		#endregion
-
-		public List<int> FleetShipId;
-
-		public List<List<int>> FleetSlotId;
-
-		public List<int> FleetExSlotId;
 
 		#region Ships 변경 통지 프로퍼티
 		private IEnumerable<ShipData> _Ships;
@@ -61,16 +64,13 @@ namespace KantaiHelper.ViewModels.Fleet
 			}protected set { throw new NotImplementedException(); }
 		}
 
-		public FleetShipViewModel() {
-
+		public FleetShipViewModel(ToolViewModel viewmodel) {
+			_ViewModel = viewmodel;
 		}
 
-		public FleetShipViewModel(string fleetname, List<int> fleetshipid, List<List<int>> fleetslotid, List<int> exslotid)
+		public void DeleteFleet()
 		{
-			this.FleetName = fleetname;
-			this.FleetShipId = fleetshipid;
-			this.FleetSlotId = fleetslotid;
-			this.FleetExSlotId = exslotid;
+			_ViewModel.DeleteFleet(this);
 		}
 
 		public void UpdateFleetData()
@@ -94,8 +94,8 @@ namespace KantaiHelper.ViewModels.Fleet
 						ship.FleetNo = i + 1;
 					}
 				}
-				ship.UpdateSlots();
-			}
+                ship.UpdateSlots();
+            }
 			Ships = this.Ships.OrderBy(x => x.FleetNo).ToArray();
 		}
 	}

@@ -140,6 +140,9 @@
     <Compile Include="ViewModels\Setting\AddFleetWindowViewModel.cs" />
     <Compile Include="ViewModels\TabItemViewModel.cs" />
     <Compile Include="ViewModels\ToolViewModel.cs" />
+    <Compile Include="Views\Behaviors\DragAcceptDescription.cs" />
+    <Compile Include="Views\Behaviors\DragAcceptBehavior.cs" />
+    <Compile Include="Views\Behaviors\DragStartBehavior.cs" />
     <Compile Include="Views\Setting\FleetSettingWindow.xaml.cs">
       <DependentUpon>FleetSettingWindow.xaml</DependentUpon>
     </Compile>

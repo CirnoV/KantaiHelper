@@ -11,9 +11,9 @@
 			 xmlns:metro2="clr-namespace:MetroTrilithon.UI.Controls;assembly=MetroTrilithon.Desktop"
 			 xmlns:vm="clr-namespace:KantaiHelper.ViewModels"
 			 xmlns:v="clr-namespace:KantaiHelper.Views.Setting"
-			 xmlns:fleetvm="clr-namespace:KantaiHelper.ViewModels.Fleet"
              xmlns:m="clr-namespace:KantaiHelper.Models"
 			 xmlns:kcvc="http://schemes.grabacr.net/winfx/2015/kancolleviewer/controls"
+             xmlns:behavior="clr-namespace:KantaiHelper.Views.Behaviors"
              Background="{DynamicResource ThemeBrushKey}"
              Foreground="{DynamicResource ActiveForegroundBrushKey}"
 			 d:DataContext="{d:DesignInstance vm:ToolViewModel}"
@@ -72,57 +72,55 @@
                               PanningMode="Both"
                               Background="{DynamicResource ActiveBackgroundBrushKey}">
                 <metro:TabView ItemsSource="{Binding Fleets, Mode=TwoWay}"
-                                   SelectedItem="{Binding SelectedFleet}"
-                                   IsSynchronizedWithCurrentItem="True"
-                                   MinWidth="90">
-                    <metro:TabView.Template>
-                        <ControlTemplate TargetType="{x:Type metro:TabView}">
-                            <StackPanel Background="{TemplateBinding Background}">
-                                <ItemsPresenter/>
-                            </StackPanel>
-                        </ControlTemplate>
-                    </metro:TabView.Template>
-                    <metro:TabView.GroupStyle>
-                        <GroupStyle>
-                            <GroupStyle.ContainerStyle>
-                                <Style TargetType="{x:Type GroupItem}">
-                                    <Setter Property="Template">
-                                        <Setter.Value>
-                                            <ControlTemplate TargetType="{x:Type GroupItem}">
-                                                <StackPanel >
-                                                    <Border Padding="10,7"
-                                                                Background="{DynamicResource ThemeBrushKey}">
-                                                        <TextBlock Text="{Binding Name.Name}"
-                                                                       Foreground="{DynamicResource AccentBrushKey}"
-                                                                       FontSize="16"/>
-                                                    </Border>
-                                                    <ItemsPresenter Margin="0,0,0,16"/>
-                                                </StackPanel>
-                                            </ControlTemplate>
-                                        </Setter.Value>
-                                    </Setter>
-                                </Style>
-                            </GroupStyle.ContainerStyle>
-                        </GroupStyle>
-                    </metro:TabView.GroupStyle>
+                               SelectedItem="{Binding SelectedFleet}"
+                               IsSynchronizedWithCurrentItem="True"
+                               MinWidth="90"
+                               AllowDrop="True">
+                    <i:Interaction.Behaviors>
+                        <behavior:DragAcceptBehavior Description="{Binding Description}"/>
+                    </i:Interaction.Behaviors>
+                    <metro:TabView.ItemTemplate>
+                        <DataTemplate>
+                            <Grid>
+                                <i:Interaction.Behaviors>
+                                    <behavior:DragStartBehavior AllowedEffects="Move" DragDropData="{Binding}"/>
+                                </i:Interaction.Behaviors>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition SharedSizeGroup="ListName"/>
+                                    <ColumnDefinition Width="Auto"/>
+                                </Grid.ColumnDefinitions>
+
+                                <TextBlock Text="{Binding FleetName}" Margin="10,7" FontSize="14" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                                <metro2:CallMethodButton Grid.Column="1" Content="X" MethodName="DeleteFleet" HorizontalAlignment="Right" Background="{DynamicResource ActiveBackgroundBrushKey}"/>
+                            </Grid>
+                        </DataTemplate>
+                    </metro:TabView.ItemTemplate>
                 </metro:TabView>
             </ScrollViewer>
         </Expander>
         <ScrollViewer Grid.Column="1" HorizontalScrollBarVisibility="Auto"
 					  VerticalScrollBarVisibility="Auto">
             <Grid Background="{DynamicResource BackgroundBrushKey}">
-            <Grid.RowDefinitions>
-                <RowDefinition Height="Auto"/>
-                <RowDefinition/>
-            </Grid.RowDefinitions>
-            <StackPanel>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition/>
+                </Grid.RowDefinitions>
+                <StackPanel>
                     <Grid HorizontalAlignment="Left" Margin="0,5,0,0">
                         <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="Auto"/>
                             <ColumnDefinition Width="Auto"/>
                             <ColumnDefinition Width="Auto"/>
                         </Grid.ColumnDefinitions>
                         <metro2:CallMethodButton Grid.Column="0" Margin="5,0,0,0" Content="함대 추가" Padding="2" MethodName="ShowAddFleetWindow"/>
                         <metro2:CallMethodButton Grid.Column="1" Margin="5,0,0,0" Content="함대 설정" Padding="2" MethodName="ShowFleetSettingWindow"/>
+                        <CheckBox Grid.Column="2" Margin="20,0,0,0" Content="증설 슬롯에 장착된 아이템도 표시" IsChecked="{Binding ExSlotChecked}">
+                            <i:Interaction.Triggers>
+                                <i:EventTrigger EventName="Click">
+                                    <l:LivetCallMethodAction MethodTarget="{Binding}" MethodName="ShowExSlot_Click"/>
+                                </i:EventTrigger>
+                            </i:Interaction.Triggers>
+                        </CheckBox>
                     </Grid>
                     <ItemsControl  ItemsSource="{Binding SelectedFleet.Ships}"
 									  Background="Transparent"
@@ -191,7 +189,7 @@
 												Background="Transparent"
                                                 Grid.Column="3"
                                                 Margin="6,0,0,0"
-                                                Visibility="{Binding ExSlotEquipped, Converter={StaticResource BooleanToVisibilityConverter}}">
+                                                Visibility="{Binding ExSlotExist, Converter={StaticResource BooleanToVisibilityConverter}}">
                                             <Grid>
                                                 <Grid.ColumnDefinitions>
                                                     <ColumnDefinition Width="Auto"/>
@@ -202,7 +200,7 @@
                                                            Style="{DynamicResource SeparatorRectangleStyleKey}"
                                                            Margin="0,4,0,3"/>
 
-                                                <kcvc:SlotItemIcon Grid.Column="1" Type="{Binding ExSlot.IconType}" Margin="5,3"/>
+                                                <kcvc:SlotItemIcon Grid.Column="1" Margin="5,3" Type="{Binding ExSlot.IconType}"/>
                                             </Grid>
                                         </Border>
                                     </Grid>

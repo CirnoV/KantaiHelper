@@ -16,6 +16,9 @@ using KantaiHelper.ViewModels.Setting;
 using System.Collections.ObjectModel;
 using System.Xml;
 
+using KantaiHelper.Views.Behaviors;
+using System.Windows;
+
 namespace KantaiHelper.ViewModels
 {
 	class ToolViewModel : ViewModel
@@ -54,23 +57,41 @@ namespace KantaiHelper.ViewModels
 		}
 		#endregion
 
+		#region ExSlotChecked 변경 통지 프로퍼티
+		public static bool ShowExSlot;
+
+		public bool ExSlotChecked
+		{
+			get
+			{ return ShowExSlot; }
+			set
+			{
+				if (ShowExSlot == value)
+					return;
+				ShowExSlot = value;
+				this.UpdateFleet();
+				this.SaveFleets();
+			}
+		}
+		#endregion
+
+		#region Description 프로퍼티
+		private readonly DragAcceptDescription _Description;
+
+		public DragAcceptDescription Description
+		{
+			get { return this._Description; }
+		}
+		#endregion
+
 		public ToolViewModel()
 		{
+			this._Description = new DragAcceptDescription();
+			this._Description.DragOver += this.OnDragOver;
+			this._Description.DragDrop += this.OnDragDrop;
+
 			Fleets = new ObservableCollection<FleetShipViewModel>();
 			LoadFleets();
-			/*
-			_FleetShips = new FleetShipViewModel[1];
-			_FleetShips[0] = new FleetShipViewModel("2전 3뇌순 1항", new int[6] { 6528, 192, 40, 456, 356, 734 }, new int[][] {
-				new int[4] { 384, 8408, 739, 2236 },
-				new int[4] { 1381, 1380, 607, 8410 } ,
-				new int[3] { 4603, 362, 1488 },
-				new int[3] { 8409, 4596, 165 },
-				new int[3] { 597, 716, 166 },
-				new int[4] { 4617, 4865, 7537, 1057 }
-			});
-			*/
-			//_FleetShips[1] = new FleetShipViewModel("시작함", new int[3] { 1, 4, 6 }, new int[][] { new int[1] { 3 } });
-			//_FleetShips[2] = new FleetShipViewModel("4잠", new int[4] { 6400, 294, 388, 3186 });
 		}
 
 		public void ShowAddFleetWindow()
@@ -87,6 +108,42 @@ namespace KantaiHelper.ViewModels
 			var message = new TransitionMessage(fleetwd, TransitionMode.Normal, "FleetSettingWindow.Show");
 			this.Messenger.Raise(message);
 		}
+
+		public void ShowExSlot_Click()
+		{
+			UpdateFleet();
+		}
+
+		#region Drag & Drop
+		private void OnDragOver(DragEventArgs args)
+		{
+			if (args.AllowedEffects.HasFlag(DragDropEffects.Move) &&
+				args.Data.GetDataPresent(typeof(FleetShipViewModel)))
+			{
+				args.Effects = DragDropEffects.Move;
+			}
+		}
+
+		void OnDragDrop(DragEventArgs args)
+		{
+			// check and get data
+			if (!args.Data.GetDataPresent(typeof(FleetShipViewModel))) return;
+			var data = args.Data.GetData(typeof(FleetShipViewModel)) as FleetShipViewModel;
+			if (data == null) return;
+			var fe = args.OriginalSource as FrameworkElement;
+			if (fe == null) return;
+			var target = fe.DataContext as FleetShipViewModel;
+			if (target == null) return;
+
+			// move data
+			var si = _Fleets.IndexOf(data);
+			var di = _Fleets.IndexOf(target);
+			if (si < 0 || di < 0 || si == di) return;
+			Fleets.Move(si, di);
+
+			SaveFleets();
+		}
+		#endregion
 
 		private string MainFolder = Path.GetDirectoryName(System.Reflection.Assembly.GetEntryAssembly().Location);
 
@@ -106,9 +163,13 @@ namespace KantaiHelper.ViewModels
 
 				XmlNode root = xml.SelectSingleNode("fleets");
 
+				var showexslot = root.Attributes["showexslot"];
+				if (showexslot != null)
+					ExSlotChecked = bool.Parse(showexslot.Value);
+
 				foreach (XmlNode kantai in root.SelectNodes("fleet"))
 				{
-					var fleet = new FleetShipViewModel();
+					var fleet = new FleetShipViewModel(this);
 					fleet.FleetShipId = new List<int>();
 					fleet.FleetSlotId = new List<List<int>>();
 					fleet.FleetExSlotId = new List<int>();
@@ -147,6 +208,10 @@ namespace KantaiHelper.ViewModels
 
 			XmlNode root = xml.CreateElement("fleets");
 			xml.AppendChild(root);
+
+			XmlAttribute showexslot = xml.CreateAttribute("showexslot");
+			showexslot.Value = ExSlotChecked ? bool.TrueString : bool.FalseString;
+			root.Attributes.Append(showexslot);
 
 			foreach (var fleet in Fleets)
 			{
@@ -187,38 +252,9 @@ namespace KantaiHelper.ViewModels
 			}
 			path += @"\Fleets.xml";
 			xml.Save(path);
-
-			/*
-			if (!Directory.Exists(Path.Combine(MainFolder, "KantaiHelper")))
-				Directory.CreateDirectory(Path.Combine(MainFolder, "KantaiHelper"));
-
-			var csvPath = Path.Combine(MainFolder, "KantaiHelper/Fleets.csv");
-			
-			StreamWriter writer = new StreamWriter(csvPath, false, Encoding.UTF8);
-
-			foreach(var fleet in Fleets)
-			{
-				string data = "";
-
-				data += fleet.FleetName;
-				data += ",";
-				for(int x = 0; x < 6; x++)
-				{
-					if (fleet.FleetShipId.Count() > x) data += fleet.FleetShipId[x];
-					data += ",";
-					for(int y = 0; y < 4; y++)
-					{
-						if (fleet.FleetShipId.Count() > x && fleet.FleetSlotId[x].Count() > y) data += fleet.FleetSlotId[x][y];
-						if (x < 5 || y < 3) data += ",";
-					}
-				}
-				writer.WriteLine(data);
-			}
-			writer.Close();
-			*/
 		}
 
-		public void AddFleet(FleetShipViewModel fleet)
+        public void AddFleet(FleetShipViewModel fleet)
 		{
 			this.Fleets.Add(fleet);
 			UpdateFleet(fleet);

@@ -1,5 +1,6 @@
 ﻿using Grabacr07.KanColleWrapper;
 using Grabacr07.KanColleWrapper.Models;
+using KantaiHelper.ViewModels;
 using Livet;
 using System;
 using System.Collections.Generic;
@@ -195,12 +196,30 @@ namespace KantaiHelper.Models
 				this.RaisePropertyChanged();
 			}
 		}
-		#endregion
+        #endregion
 
-		public bool ExSlotEquipped => ExSlot != null;
+        #region ExSlotExist 변경 통지 프로퍼티
+        private bool _ExSlotExist;
 
-		#region ExSlot 변경 통지 프로퍼티
-		private ShipSlotData _ExSlot;
+        public bool ExSlotExist
+        {
+            get
+            {
+                return _ExSlotExist;
+            }
+            set
+            {
+                if (_ExSlotExist == value)
+                    return;
+                _ExSlotExist = value;
+                this.RaisePropertyChanged();
+            }
+        }
+        //ToolViewModel.ShowExSlot && ExSlot != null
+        #endregion
+
+        #region ExSlot 변경 통지 프로퍼티
+        private ShipSlotData _ExSlot;
 
 		public ShipSlotData ExSlot
 		{
@@ -250,7 +269,8 @@ namespace KantaiHelper.Models
 			{
 				this.ExSlot = new ShipSlotData(exSlotItem);
 			}
-		}
+            ExSlotExist = ToolViewModel.ShowExSlot && ExSlot != null;
+        }
 	}
 
 	public class MembersShipData : ShipData
