@@ -136,6 +136,7 @@
     <Compile Include="Models\ShipSlotData.cs" />
     <Compile Include="ViewModels\Fleet\FleetShipViewModel.cs" />
     <Compile Include="ViewModels\ItemViewModel.cs" />
+    <Compile Include="ViewModels\Setting\DeleteFleetWindowViewModel.cs" />
     <Compile Include="ViewModels\Setting\FleetSettingWindowViewModel.cs" />
     <Compile Include="ViewModels\Setting\AddFleetWindowViewModel.cs" />
     <Compile Include="ViewModels\TabItemViewModel.cs" />
@@ -143,6 +144,9 @@
     <Compile Include="Views\Behaviors\DragAcceptDescription.cs" />
     <Compile Include="Views\Behaviors\DragAcceptBehavior.cs" />
     <Compile Include="Views\Behaviors\DragStartBehavior.cs" />
+    <Compile Include="Views\Setting\DeleteFleetWindow.xaml.cs">
+      <DependentUpon>DeleteFleetWindow.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Views\Setting\FleetSettingWindow.xaml.cs">
       <DependentUpon>FleetSettingWindow.xaml</DependentUpon>
     </Compile>
@@ -188,6 +192,10 @@
     <Page Include="Styles\DefaultStyle.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\Setting\DeleteFleetWindow.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
     </Page>
     <Page Include="Views\Setting\FleetSettingWindow.xaml">
       <Generator>MSBuild:Compile</Generator>

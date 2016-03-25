@@ -64,13 +64,14 @@ namespace KantaiHelper.ViewModels.Fleet
 			}protected set { throw new NotImplementedException(); }
 		}
 
-		public FleetShipViewModel(ToolViewModel viewmodel) {
+		public FleetShipViewModel(ToolViewModel viewmodel)
+		{
 			_ViewModel = viewmodel;
 		}
 
-		public void DeleteFleet()
+		public void RequestDeleteFleet()
 		{
-			_ViewModel.DeleteFleet(this);
+			_ViewModel.RequestDeleteFleet(this);
 		}
 
 		public void UpdateFleetData()

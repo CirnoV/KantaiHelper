@@ -109,6 +109,13 @@ namespace KantaiHelper.ViewModels
 			this.Messenger.Raise(message);
 		}
 
+		public void RequestDeleteFleet(FleetShipViewModel fleet)
+		{
+			var fleetwd = new DeleteFleetWindowViewModel(this, fleet);
+			var message = new TransitionMessage(fleetwd, TransitionMode.Normal, "DeleteFleetWindow.Show");
+			this.Messenger.Raise(message);
+		}
+
 		public void ShowExSlot_Click()
 		{
 			UpdateFleet();

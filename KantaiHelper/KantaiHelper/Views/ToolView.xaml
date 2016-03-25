@@ -32,16 +32,22 @@
     </UserControl.Resources>
 
     <i:Interaction.Triggers>
-        <l:InteractionMessageTrigger Messenger="{Binding Messenger}"
-										 MessageKey="AddFleetWindow.Show">
-            <l:TransitionInteractionMessageAction Mode="NewOrActive"
-													  WindowType="v:AddFleetWindow"
-													  IsOwned="False" />
+        <l:InteractionMessageTrigger Messenger="{Binding Messenger}" 
+                                     MessageKey="AddFleetWindow.Show">
+            <l:TransitionInteractionMessageAction Mode="NewOrActive" 
+                                                  WindowType="v:AddFleetWindow"
+                                                  IsOwned="False" />
         </l:InteractionMessageTrigger>
         <l:InteractionMessageTrigger Messenger="{Binding Messenger}"
 										 MessageKey="FleetSettingWindow.Show">
             <l:TransitionInteractionMessageAction Mode="NewOrActive"
 													  WindowType="v:FleetSettingWindow"
+													  IsOwned="False" />
+        </l:InteractionMessageTrigger>
+        <l:InteractionMessageTrigger Messenger="{Binding Messenger}"
+										 MessageKey="DeleteFleetWindow.Show">
+            <l:TransitionInteractionMessageAction Mode="NewOrActive"
+													  WindowType="v:DeleteFleetWindow"
 													  IsOwned="False" />
         </l:InteractionMessageTrigger>
     </i:Interaction.Triggers>
@@ -91,7 +97,7 @@
                                 </Grid.ColumnDefinitions>
 
                                 <TextBlock Text="{Binding FleetName}" Margin="10,7" FontSize="14" HorizontalAlignment="Center" VerticalAlignment="Center"/>
-                                <metro2:CallMethodButton Grid.Column="1" Content="X" MethodName="DeleteFleet" HorizontalAlignment="Right" Background="{DynamicResource ActiveBackgroundBrushKey}"/>
+                                <metro2:CallMethodButton Grid.Column="1" Content="X" MethodName="RequestDeleteFleet" HorizontalAlignment="Right" Background="{DynamicResource ActiveBackgroundBrushKey}"/>
                             </Grid>
                         </DataTemplate>
                     </metro:TabView.ItemTemplate>
