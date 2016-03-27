@@ -10,6 +10,7 @@ using KantaiHelper.Views;
 using KantaiHelper.ViewModels;
 using Grabacr07.KanColleWrapper;
 using Grabacr07.KanColleWrapper.Models.Raw;
+using KantaiHelper.Models;
 
 namespace KantaiHelper
 {

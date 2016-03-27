@@ -60,7 +60,7 @@
 
         <Expander Grid.Column="0"
                       ExpandDirection="Right"
-                      Header="함&#xD;&#xA;대&#xD;&#xA;목&#xD;&#xA;록"
+                      Header="Fleet List"
                       Background="{DynamicResource ThemeBrushKey}"
                       IsExpanded="True">
             <Expander.Style>
@@ -71,6 +71,9 @@
                     <TextBlock Text="{Binding}"
                                    Style="{DynamicResource DefaultTextStyleKey}"
                                    Margin="5">
+                        <TextBlock.LayoutTransform>
+                            <RotateTransform Angle="90"/>
+                        </TextBlock.LayoutTransform>
                     </TextBlock>
                 </DataTemplate>
             </Expander.HeaderTemplate>
@@ -186,7 +189,7 @@
 													 Style="{DynamicResource EmphaticTextElementStyleKey}" 
                                                      FontSize="13"/>
 												<LineBreak />
-												<Run Text="컨디션"
+												<Run Text="Condition"
 													 FontSize="8" />
                                         </TextBlock>
 
