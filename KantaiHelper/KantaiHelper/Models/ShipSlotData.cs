@@ -6,6 +6,8 @@ using System.Threading.Tasks;
 
 using Livet;
 using Grabacr07.KanColleWrapper.Models;
+using Grabacr07.KanColleWrapper;
+using KantaiHelper.ViewModels;
 
 namespace KantaiHelper.Models
 {
@@ -15,6 +17,7 @@ namespace KantaiHelper.Models
 		/// 해당 장비가 몇번째 슬롯인지를 나타냅니다.
 		/// </summary>
 		public int ShipSlotId;
+		public int ShipId;
 
 		public int SlotId;
 		public int MastarId;
@@ -32,6 +35,45 @@ namespace KantaiHelper.Models
 		public string NameWithLevel { get; set; }
 		public SlotItemIconType IconType { get; set; }
 
+		#region EquippedShipExist 변경 통지 프로퍼티
+		private bool _EquippedShipExist;
+
+		public bool EquippedShipExist
+		{
+			get
+			{
+				return _EquippedShipExist;
+			}
+			set
+			{
+				if (_EquippedShipExist == value)
+					return;
+				_EquippedShipExist = value;
+				this.RaisePropertyChanged();
+			}
+		}
+		//ToolViewModel.ShowExSlot && ExSlot != null
+		#endregion
+
+		#region EquippedShipName 변경 통지 프로퍼티
+		private string _EquippedShipName;
+
+		public string EquippedShipName
+		{
+			get
+			{
+				return _EquippedShipName;
+			}
+			set
+			{
+				if (_EquippedShipName == value)
+					return;
+				_EquippedShipName = value;
+				this.RaisePropertyChanged();
+			}
+		}
+		#endregion
+
 		public string Description => (this.Firepower != 0 ? "화력:" + this.Firepower : "")
 								 + (this.Torpedo != 0 ? " 뇌장:" + this.Torpedo : "")
 								 + (this.AA != 0 ? " 대공:" + this.AA : "")
@@ -42,8 +84,9 @@ namespace KantaiHelper.Models
 								 + (this.Evade != 0 ? " 회피:" + this.Evade : "")
 								 + (this.LOS != 0 ? " 색적:" + this.LOS : "");
 
-		public ShipSlotData(SlotItem item)
+		public ShipSlotData(SlotItem item, int shipid)
 		{
+			this.ShipId = shipid;
 			var info = item.Info;
 
 			if (info == null) return;
@@ -53,6 +96,13 @@ namespace KantaiHelper.Models
 
 			this.NameWithLevel = item.NameWithLevel;
 			this.IconType = item.Info.IconType;
+
+			EquippedShipExist = ToolViewModel.ShowEquippedShip;
+			if (EquippedShipExist == true)
+			{
+				var ship = KanColleClient.Current.Homeport.Organization.Ships.Where(x => x.Value.Id != shipid && x.Value.EquippedItems.Where(y => y.Item.Id == item.Id).SingleOrDefault() != null).SingleOrDefault().Value;
+				this.EquippedShipName = ship != null ? ("Lv. " + ship.Level + " " + ship.Info.Name) : "";
+			}
 
 			var m = HelperPlugin.RawStart2.api_mst_slotitem.SingleOrDefault(x => x.api_id == info.Id);
 			if (m == null) return;

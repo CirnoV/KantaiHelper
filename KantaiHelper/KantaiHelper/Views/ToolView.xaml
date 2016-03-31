@@ -27,7 +27,7 @@
                 <ResourceDictionary Source="../Styles/DefaultStyle.xaml"/>
             </ResourceDictionary.MergedDictionaries>
 
-            <BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter" />
+            <BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter"/>
         </ResourceDictionary>
     </UserControl.Resources>
 
@@ -117,16 +117,12 @@
                             <ColumnDefinition Width="Auto"/>
                             <ColumnDefinition Width="Auto"/>
                             <ColumnDefinition Width="Auto"/>
+                            <ColumnDefinition Width="Auto"/>
                         </Grid.ColumnDefinitions>
                         <metro2:CallMethodButton Grid.Column="0" Margin="5,0,0,0" Content="함대 추가" Padding="2" MethodName="ShowAddFleetWindow"/>
                         <metro2:CallMethodButton Grid.Column="1" Margin="5,0,0,0" Content="함대 설정" Padding="2" MethodName="ShowFleetSettingWindow"/>
-                        <CheckBox Grid.Column="2" Margin="20,0,0,0" Content="증설 슬롯에 장착된 아이템도 표시" IsChecked="{Binding ExSlotChecked}">
-                            <i:Interaction.Triggers>
-                                <i:EventTrigger EventName="Click">
-                                    <l:LivetCallMethodAction MethodTarget="{Binding}" MethodName="ShowExSlot_Click"/>
-                                </i:EventTrigger>
-                            </i:Interaction.Triggers>
-                        </CheckBox>
+                        <CheckBox Grid.Column="2" Margin="15,0,0,0" Content="증설 슬롯에 장착된 장비 표시" IsChecked="{Binding ExSlotChecked}"/>
+                        <CheckBox Grid.Column="3" Margin="15,0,0,0" Content="해당 장비를 장착중인 다른 칸무스 표시" IsChecked="{Binding EquippedShipChecked}"/>
                     </Grid>
                     <ItemsControl  ItemsSource="{Binding SelectedFleet.Ships}"
 									  Background="Transparent"
@@ -237,8 +233,9 @@
 
                                                             <kcvc:SlotItemIcon Grid.Column="0" Type="{Binding IconType}" Margin="0,3"/>
                                                             <TextBlock Grid.Column="1" Margin="5,7,0,0">
-                                                        <Run Style="{DynamicResource EmphaticTextElementStyleKey}" Text="{Binding NameWithLevel}" FontSize="12"></Run>
+                                                                <Run Style="{DynamicResource EmphaticTextElementStyleKey}" Text="{Binding NameWithLevel}" FontSize="13"/>
                                                             </TextBlock>
+                                                            <TextBlock Grid.Column="1" Text="{Binding EquippedShipName}" Visibility="{Binding EquippedShipExist, Converter={StaticResource BooleanToVisibilityConverter}}" FontSize="10" Margin="5,25,0,0" Foreground="#FFFFD384"/>
                                                         </Grid>
                                                     </Border>
                                                 </DataTemplate>

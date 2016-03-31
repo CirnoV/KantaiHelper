@@ -250,7 +250,7 @@ namespace KantaiHelper.Models
 			if (KanColleClient.Current.IsStarted == false) return;
 			if (ShipSlotId == null) return;
 			var itemYard = KanColleClient.Current.Homeport.Itemyard;
-			this._Slots = itemYard.SlotItems.Where(x => this.ShipSlotId.Any(t => x.Value.Id == t)).Select(s => new ShipSlotData(s.Value)).ToArray();
+			this._Slots = itemYard.SlotItems.Where(x => this.ShipSlotId.Any(t => x.Value.Id == t)).Select(s => new ShipSlotData(s.Value, _Id)).ToArray();
 
 			foreach (ShipSlotData slot in _Slots)
 			{
@@ -263,14 +263,14 @@ namespace KantaiHelper.Models
 				}
 			}
 			this.Slots = this.Slots.OrderBy(x => x.ShipSlotId).ToArray();
-
+			
 			var exSlotItem = itemYard.SlotItems.SingleOrDefault(x => x.Value.Id == ShipExSlotId).Value;
-			if(exSlotItem != null)
+			if (exSlotItem != null)
 			{
-				this.ExSlot = new ShipSlotData(exSlotItem);
+				this.ExSlot = new ShipSlotData(exSlotItem, _Id);
 			}
-            ExSlotExist = ToolViewModel.ShowExSlot && ExSlot != null;
-        }
+			ExSlotExist = ToolViewModel.ShowExSlot && ExSlot != null;
+		}
 	}
 
 	public class MembersShipData : ShipData

@@ -57,7 +57,7 @@ namespace KantaiHelper.ViewModels
 		}
 		#endregion
 
-		#region ExSlotChecked 변경 통지 프로퍼티
+		#region ShowExSlot 변경 통지 프로퍼티
 		public static bool ShowExSlot;
 
 		public bool ExSlotChecked
@@ -71,6 +71,23 @@ namespace KantaiHelper.ViewModels
 				ShowExSlot = value;
 				this.UpdateFleet();
 				this.SaveFleets();
+			}
+		}
+		#endregion
+
+		#region ShowEquippedShip 변경 통지 프로퍼티
+		public static bool ShowEquippedShip;
+
+		public bool EquippedShipChecked
+		{
+			get
+			{ return ShowEquippedShip; }
+			set
+			{
+				if (ShowEquippedShip == value)
+					return;
+				ShowEquippedShip = value;
+				this.UpdateFleet();
 			}
 		}
 		#endregion
@@ -114,11 +131,6 @@ namespace KantaiHelper.ViewModels
 			var fleetwd = new DeleteFleetWindowViewModel(this, fleet);
 			var message = new TransitionMessage(fleetwd, TransitionMode.Normal, "DeleteFleetWindow.Show");
 			this.Messenger.Raise(message);
-		}
-
-		public void ShowExSlot_Click()
-		{
-			UpdateFleet();
 		}
 
 		#region Drag & Drop
