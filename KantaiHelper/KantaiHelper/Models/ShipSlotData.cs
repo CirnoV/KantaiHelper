@@ -96,13 +96,10 @@ namespace KantaiHelper.Models
 
 			this.NameWithLevel = item.NameWithLevel;
 			this.IconType = item.Info.IconType;
-
-			EquippedShipExist = ToolViewModel.ShowEquippedShip;
-			if (EquippedShipExist == true)
-			{
-				var ship = KanColleClient.Current.Homeport.Organization.Ships.Where(x => x.Value.Id != shipid && x.Value.EquippedItems.Where(y => y.Item.Id == item.Id).SingleOrDefault() != null).SingleOrDefault().Value;
-				this.EquippedShipName = ship != null ? ("Lv. " + ship.Level + " " + ship.Info.Name) : "";
-			}
+			
+			var ship = KanColleClient.Current.Homeport.Organization.Ships.Where(x => x.Value.Id != shipid && x.Value.EquippedItems.Where(y => y.Item.Id == item.Id).SingleOrDefault() != null).SingleOrDefault().Value;
+			this.EquippedShipName = ship != null ? ("Lv. " + ship.Level + " " + ship.Info.Name) : null;
+			EquippedShipExist = ToolViewModel.ShowEquippedShip && EquippedShipName != null;
 
 			var m = HelperPlugin.RawStart2.api_mst_slotitem.SingleOrDefault(x => x.api_id == info.Id);
 			if (m == null) return;
