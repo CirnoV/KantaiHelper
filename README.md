@@ -1,5 +1,9 @@
 # KantaiHelper
 
+[![Release](https://img.shields.io/github/release/CirnoV/KantaiHelper.svg?style=flat-square)](https://github.com/CirnoV/KantaiHelper/releases/latest)
+[![Downloads](https://img.shields.io/github/downloads/CirnoV/KantaiHelper/latest/total.svg?style=flat-square)](https://github.com/CirnoV/KantaiHelper/releases/latest)
+[![License](https://img.shields.io/github/license/CirnoV/KantaiHelper.svg?style=flat-square)](https://github.com/CirnoV/KantaiHelper/blob/master/LICENSE)
+
 ![Example](http://i.imgur.com/V3Iekgb.png)
 ↑ 예시
 
